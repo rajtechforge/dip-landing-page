@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DIP – Digital Investment Program</title>
+<meta name="description" content="DIP verbindet digitale Reichweite mit realer Geschäftstätigkeit." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Sora:wght@200;300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ══ DARK THEME — Premium Gold on Navy ══ */
+[data-theme="dark"] {
+  --bg:         #080C16;
+  --bg-alt:     #0D1322;
+  --surface:    #121A2E;
+  --panel:      #18223A;
+  --border:     rgba(200,165,92,0.10);
+  --border-hi:  rgba(200,165,92,0.28);
+  --accent:     #C8A55C;
+  --accent-2:   #E2CC8E;
+  --accent-dim: #8F7A42;
+  --accent-glow:rgba(200,165,92,0.08);
+  --emerald:    #34D399;
+  --text:       #DDE2F0;
+  --text-strong:#FFFFFF;
+  --muted:      #7484A4;
+  --white:      #F2F4FB;
+  --nav-bg:     rgba(8,12,22,0.96);
+  --card-bg:    rgba(18,26,46,0.85);
+  --input-bg:   rgba(255,255,255,0.04);
+  --shadow:     0 4px 40px rgba(0,0,0,0.45);
+  --glow:       0 0 80px rgba(200,165,92,0.06);
+  --btn-text:   #080C16;
+  --logo-bg:    linear-gradient(145deg, var(--accent-2), var(--accent));
+}
+
+/* ══ LIGHT THEME — Premium Gold on Cream ══ */
+[data-theme="light"] {
+  --bg:         #FAFAF7;
+  --bg-alt:     #F3F2ED;
+  --surface:    #ECEAE3;
+  --panel:      #E2E0D8;
+  --border:     rgba(12,16,28,0.07);
+  --border-hi:  rgba(12,16,28,0.16);
+  --accent:     #8A6E3E;
+  --accent-2:   #6B5530;
+  --accent-dim: #A8884C;
+  --accent-glow:rgba(138,110,62,0.06);
+  --emerald:    #059669;
+  --text:       #33302A;
+  --text-strong:#1A1710;
+  --muted:      #7A756A;
+  --white:      #1A1710;
+  --nav-bg:     rgba(250,250,247,0.97);
+  --card-bg:    rgba(243,242,237,0.92);
+  --input-bg:   rgba(12,16,28,0.04);
+  --shadow:     0 2px 24px rgba(12,16,28,0.05);
+  --glow:       none;
+  --btn-text:   #FAFAF7;
+  --logo-bg:    linear-gradient(145deg, #1A1710, #33302A);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Sora', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+  transition: background .5s, color .5s;
+}
+a { color: inherit; text-decoration: none; }
+
+/* Noise */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 1;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.025'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--accent-dim); border-radius: 4px; }
+
+.lang-hidden { display: none !important; }
+
+/* Transition helper */
+.topbar, .topbar-inner, .hero, .marquee-strip, .about-section, .partners-bar,
+.features-section, .stats-strip, .cta-section, footer, .bento-card,
+.vis-card, .logo-icon, .pill-switch, .nav-btn, .btn-fill, .cta-form,
+.bc-icon, .icon-btn {
+  transition: background .5s ease, border-color .4s ease, color .4s ease, box-shadow .4s ease;
+}
+
+/* ── NAV ── */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 0 48px;
+  transition: all .4s;
+}
+.topbar-inner {
+  max-width: 1280px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 22px 0;
+  border-bottom: 1px solid transparent;
+  transition: all .4s;
+}
+.topbar.scrolled {
+  background: var(--nav-bg);
+  backdrop-filter: blur(24px);
+  box-shadow: var(--shadow);
+}
+.topbar.scrolled .topbar-inner {
+  border-bottom-color: var(--border);
+}
+
+.logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.logo-icon {
+  width: 40px; height: 40px; border-radius: 12px;
+  display: grid; place-items: center;
+  font-weight: 700; font-size: 12px;
+  color: var(--btn-text);
+  background: var(--logo-bg);
+  box-shadow: 0 4px 16px rgba(200,165,92,0.2);
+  letter-spacing: .04em;
+}
+.logo-label {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.25rem; color: var(--white);
+}
+.logo-label i { color: var(--accent-2); }
+[data-theme="light"] .logo-label i { color: var(--accent); }
+
+.nav-center { display: flex; gap: 32px; }
+.nav-center a {
+  font-size: .65rem; font-weight: 400; letter-spacing: .2em;
+  text-transform: uppercase; color: var(--muted);
+  transition: color .3s; position: relative;
+}
+.nav-center a::after {
+  content: ''; position: absolute; bottom: -3px; left: 0;
+  width: 0; height: 1.5px; background: var(--accent);
+  transition: width .3s; border-radius: 1px;
+}
+.nav-center a:hover { color: var(--accent-2); }
+.nav-center a:hover::after { width: 100%; }
+[data-theme="light"] .nav-center a:hover { color: var(--accent); }
+
+.nav-right { display: flex; align-items: center; gap: 12px; }
+
+.pill-switch {
+  display: inline-flex; padding: 3px; border-radius: 999px;
+  border: 1px solid var(--border); background: var(--input-bg);
+}
+.pill-switch button {
+  border: 0; background: transparent; color: var(--muted);
+  padding: 5px 12px; border-radius: 999px; cursor: pointer;
+  font-weight: 600; font-size: .62rem; transition: .25s;
+  font-family: 'Sora', sans-serif;
+}
+.pill-switch button.active {
+  background: var(--logo-bg);
+  color: var(--btn-text);
+}
+
+.icon-btn {
+  width: 36px; height: 36px; border-radius: 10px;
+  border: 1px solid var(--border); background: var(--input-bg);
+  color: var(--accent); cursor: pointer;
+  display: grid; place-items: center; transition: all .3s;
+}
+.icon-btn:hover { border-color: var(--accent-dim); background: var(--accent-glow); }
+.icon-btn .ic-sun { display: none; }
+.icon-btn .ic-moon { display: block; }
+[data-theme="light"] .icon-btn .ic-sun { display: block; }
+[data-theme="light"] .icon-btn .ic-moon { display: none; }
+[data-theme="light"] .icon-btn { color: var(--accent); }
+
+.nav-btn {
+  padding: 9px 24px; border-radius: 10px;
+  border: 1px solid var(--accent-dim);
+  background: transparent; color: var(--accent-2);
+  font-family: 'Sora', sans-serif;
+  font-size: .6rem; font-weight: 500;
+  letter-spacing: .16em; text-transform: uppercase;
+  cursor: pointer; transition: all .3s;
+}
+.nav-btn:hover {
+  background: var(--logo-bg); border-color: var(--accent);
+  color: var(--btn-text);
+}
+[data-theme="light"] .nav-btn {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+[data-theme="light"] .nav-btn:hover { color: var(--btn-text); }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh; display: flex; align-items: center;
+  position: relative; overflow: hidden;
+  padding: 120px 48px 80px;
+}
+.hero-glow {
+  position: absolute; top: 18%; left: 50%;
+  transform: translateX(-50%);
+  width: 700px; height: 700px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(200,165,92,0.05) 0%, transparent 70%);
+  filter: blur(50px);
+  pointer-events: none;
+}
+[data-theme="light"] .hero-glow {
+  background: radial-gradient(circle, rgba(138,110,62,0.03) 0%, transparent 70%);
+}
+
+/* Subtle grid overlay */
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(200,165,92,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(200,165,92,0.02) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(ellipse at 55% 45%, black 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.hero-wrap {
+  max-width: 1280px; margin: 0 auto; width: 100%;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 80px; align-items: center;
+  position: relative; z-index: 2;
+}
+
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 16px; border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--accent-glow);
+  font-size: .58rem; font-weight: 500;
+  color: var(--accent-2); letter-spacing: .08em;
+  margin-bottom: 32px;
+  opacity: 0; animation: fadeIn .7s .1s forwards;
+}
+[data-theme="light"] .hero-badge { color: var(--accent); }
+.badge-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--emerald);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; } 50% { opacity: .4; }
+}
+
+.hero-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2.6rem, 4.8vw, 4.2rem);
+  font-weight: 400; line-height: 1.12;
+  color: var(--white); margin-bottom: 24px;
+  opacity: 0; animation: fadeIn .8s .2s forwards;
+}
+.hero-title em { font-style: italic; color: var(--accent-2); }
+[data-theme="light"] .hero-title em { color: var(--accent); }
+.hero-title .grad {
+  background: linear-gradient(90deg, var(--accent-2), var(--accent), var(--accent-dim));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; display: block; font-weight: 400;
+}
+
+.hero-desc {
+  font-size: .82rem; line-height: 2; color: var(--muted);
+  max-width: 440px; margin-bottom: 40px;
+  opacity: 0; animation: fadeIn .8s .35s forwards;
+}
+
+.hero-btns {
+  display: flex; align-items: center; gap: 20px;
+  opacity: 0; animation: fadeIn .8s .5s forwards;
+}
+.btn-fill {
+  padding: 15px 38px; border-radius: 12px;
+  border: none;
+  background: linear-gradient(145deg, var(--accent), var(--accent-dim));
+  color: var(--btn-text); font-family: 'Sora', sans-serif;
+  font-size: .66rem; font-weight: 600;
+  letter-spacing: .18em; text-transform: uppercase;
+  cursor: pointer; transition: all .3s;
+  box-shadow: 0 8px 24px rgba(200,165,92,0.18);
+}
+.btn-fill:hover { filter: brightness(1.12); transform: translateY(-1px); box-shadow: 0 12px 32px rgba(200,165,92,0.28); }
+[data-theme="light"] .btn-fill {
+  background: linear-gradient(145deg, #1A1710, #33302A);
+  box-shadow: 0 8px 24px rgba(12,16,28,0.12);
+}
+[data-theme="light"] .btn-fill:hover { box-shadow: 0 12px 32px rgba(12,16,28,0.18); }
+
+.btn-text {
+  background: none; border: none; color: var(--muted);
+  font-family: 'Sora', sans-serif;
+  font-size: .66rem; font-weight: 400; letter-spacing: .1em;
+  text-transform: uppercase; cursor: pointer;
+  display: flex; align-items: center; gap: 8px;
+  transition: color .3s;
+}
+.btn-text:hover { color: var(--accent-2); }
+[data-theme="light"] .btn-text:hover { color: var(--accent); }
+.btn-text svg { transition: transform .3s; }
+.btn-text:hover svg { transform: translateX(3px); }
+
+/* Hero visual card stack */
+.hero-visual {
+  position: relative; height: 480px;
+  opacity: 0; animation: fadeIn .9s .6s forwards;
+}
+.vis-card {
+  position: absolute; border-radius: 16px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  padding: 32px; overflow: hidden;
+  transition: transform .4s, border-color .3s, background .5s;
+  box-shadow: var(--shadow);
+}
+.vis-card:hover { border-color: var(--border-hi); }
+.vis-card::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: .5;
+}
+
+.vis-main { top: 0; right: 0; width: 80%; z-index: 3; }
+.vis-main:hover { transform: translateY(-4px); }
+.vis-back { bottom: 30px; left: 0; width: 70%; z-index: 2; }
+.vis-back:hover { transform: translateY(-4px); }
+.vis-float { top: 55%; right: -10px; width: auto; z-index: 4; padding: 18px 24px; }
+
+.vc-label {
+  font-size: .52rem; letter-spacing: .3em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 20px; font-weight: 500;
+}
+.vc-metric {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.4rem; color: var(--accent-2); line-height: 1;
+  margin-bottom: 4px;
+}
+[data-theme="light"] .vc-metric { color: var(--accent); }
+.vc-sub {
+  font-size: .58rem; letter-spacing: .15em; text-transform: uppercase;
+  color: var(--muted);
+}
+.vc-bars { margin-top: 20px; }
+.vc-bar-row { margin-bottom: 14px; }
+.vc-bar-row:last-child { margin-bottom: 0; }
+.vc-bar-head {
+  display: flex; justify-content: space-between;
+  font-size: .64rem; color: var(--muted); margin-bottom: 6px;
+}
+.vc-bar-head span:last-child {
+  font-family: 'Space Mono', monospace; color: var(--accent);
+}
+.vc-track {
+  height: 3px; border-radius: 2px;
+  background: var(--accent-glow); overflow: hidden;
+}
+.vc-fill {
+  height: 100%; border-radius: 2px;
+  background: linear-gradient(90deg, var(--accent-dim), var(--accent));
+  transform-origin: left; transform: scaleX(0);
+  animation: barGrow 1.4s .8s ease forwards;
+}
+@keyframes barGrow { to { transform: scaleX(1); } }
+
+.mini-stat-row {
+  display: flex; justify-content: space-between; margin-bottom: 12px;
+}
+.mini-stat-row:last-child { margin-bottom: 0; }
+.ms-label { font-size: .56rem; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); }
+.ms-val { font-family: 'Space Mono', monospace; font-size: .72rem; color: var(--accent-2); }
+[data-theme="light"] .ms-val { color: var(--accent); }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── MARQUEE ── */
+.marquee-strip {
+  background: var(--surface); border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden; padding: 13px 0; position: relative; z-index: 2;
+}
+.marquee-track {
+  display: flex; animation: slide 28s linear infinite; white-space: nowrap;
+}
+.marquee-item {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 0 44px; font-family: 'Space Mono', monospace;
+  font-size: .6rem; color: var(--muted);
+  border-right: 1px solid var(--border);
+}
+.marquee-item:last-child { border-right: none; }
+.mq-sym { color: var(--accent); font-size: .56rem; letter-spacing: .12em; }
+@keyframes slide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* ── CONTAINER ── */
+.container { max-width: 1280px; margin: 0 auto; padding: 0 48px; }
+section { position: relative; z-index: 2; }
+
+/* ── ABOUT ── */
+.about-section {
+  padding: 140px 0;
+  background: linear-gradient(180deg, var(--bg) 0%, var(--bg-alt) 100%);
+}
+.about-grid {
+  display: grid; grid-template-columns: .45fr .55fr;
+  gap: 80px; align-items: start;
+}
+.about-left .stag {
+  font-size: .54rem; font-weight: 500; letter-spacing: .4em;
+  text-transform: uppercase; color: var(--accent);
+  margin-bottom: 20px;
+}
+.about-left h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(1.9rem, 3.2vw, 2.8rem);
+  font-weight: 400; line-height: 1.18;
+  color: var(--white); margin-bottom: 24px;
+}
+.about-left h2 em { font-style: italic; color: var(--accent-2); }
+[data-theme="light"] .about-left h2 em { color: var(--accent); }
+.accent-bar {
+  width: 48px; height: 2px; border-radius: 1px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+}
+.about-right p {
+  font-size: .82rem; line-height: 2.1; color: var(--muted);
+  margin-bottom: 20px;
+}
+.about-right p:last-child { margin-bottom: 0; }
+
+/* ── FEATURES (Bento) ── */
+.features-section {
+  padding: 120px 0;
+  background: var(--bg);
+}
+.features-header {
+  text-align: center; margin-bottom: 72px;
+}
+.features-header .stag {
+  font-size: .54rem; font-weight: 500; letter-spacing: .4em;
+  text-transform: uppercase; color: var(--accent);
+  margin-bottom: 16px;
+}
+.features-header h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(1.9rem, 3.2vw, 2.8rem);
+  font-weight: 400; color: var(--white); line-height: 1.18;
+}
+.features-header h2 em { font-style: italic; color: var(--accent-2); }
+[data-theme="light"] .features-header h2 em { color: var(--accent); }
+
+.bento {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto auto;
+  gap: 2px;
+}
+.bento-card {
+  background: var(--bg-alt);
+  padding: 48px 40px;
+  position: relative; overflow: hidden;
+  transition: background .4s;
+}
+.bento-card:hover { background: var(--surface); }
+.bento-card::before {
+  content: ''; position: absolute; bottom: 0; left: 0;
+  width: 0; height: 2px; background: var(--accent);
+  transition: width .5s;
+}
+.bento-card:hover::before { width: 100%; }
+.bento-card.wide { grid-column: span 2; }
+
+.bc-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  display: grid; place-items: center;
+  background: var(--accent-glow);
+  border: 1px solid var(--border);
+  margin-bottom: 24px; font-size: 1.1rem;
+  transition: border-color .3s;
+}
+.bento-card:hover .bc-icon { border-color: var(--accent-dim); }
+.bc-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.3rem; color: var(--white);
+  margin-bottom: 14px;
+}
+.bc-desc {
+  font-size: .76rem; line-height: 1.95;
+  color: var(--muted); margin-bottom: 24px;
+}
+.bc-link {
+  font-size: .56rem; font-weight: 500; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--accent-dim);
+  transition: color .3s;
+}
+.bc-link:hover { color: var(--accent-2); }
+[data-theme="light"] .bc-link:hover { color: var(--accent); }
+
+/* ── STATS ── */
+.stats-strip {
+  padding: 80px 0;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.stats-row {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 40px; text-align: center;
+}
+.sr-val {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.8rem; color: var(--accent-2);
+  line-height: 1; margin-bottom: 10px;
+}
+[data-theme="light"] .sr-val { color: var(--accent); }
+.sr-label {
+  font-size: .58rem; letter-spacing: .25em;
+  text-transform: uppercase; color: var(--muted);
+  line-height: 1.7;
+}
+
+/* ── PARTNERS ── */
+.partners-bar {
+  padding: 48px 0;
+  background: var(--bg-alt);
+  text-align: center;
+}
+.partners-label {
+  font-size: .52rem; font-weight: 500; letter-spacing: .4em;
+  text-transform: uppercase; color: var(--muted);
+  margin-bottom: 24px;
+}
+.partners-row {
+  display: flex; justify-content: center; align-items: center;
+  gap: 56px; flex-wrap: wrap;
+}
+.partner-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.05rem;
+  transition: color .3s;
+}
+[data-theme="dark"] .partner-name { color: rgba(200,165,92,0.22); }
+[data-theme="light"] .partner-name { color: rgba(12,16,28,0.14); }
+.partner-name:hover { color: var(--accent-dim); }
+
+/* ── CTA ── */
+.cta-section {
+  padding: 160px 0; text-align: center;
+  position: relative; overflow: hidden;
+}
+.cta-glow {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px; height: 600px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(200,165,92,0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+[data-theme="light"] .cta-glow {
+  background: radial-gradient(circle, rgba(138,110,62,0.025) 0%, transparent 70%);
+}
+.cta-grid-bg {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(200,165,92,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(200,165,92,0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+.cta-inner { position: relative; z-index: 2; }
+.cta-inner .stag {
+  font-size: .54rem; font-weight: 500; letter-spacing: .4em;
+  text-transform: uppercase; color: var(--accent);
+  margin-bottom: 24px;
+}
+.cta-inner h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2.2rem, 3.8vw, 3.6rem);
+  font-weight: 400; color: var(--white);
+  line-height: 1.12; margin-bottom: 24px;
+}
+.cta-inner h2 em { font-style: italic; color: var(--accent-2); }
+[data-theme="light"] .cta-inner h2 em { color: var(--accent); }
+.cta-inner .cta-desc {
+  font-size: .82rem; color: var(--muted);
+  max-width: 420px; margin: 0 auto 48px; line-height: 1.95;
+}
+.cta-form {
+  display: flex; gap: 0; max-width: 420px; margin: 0 auto;
+  border-radius: 12px; overflow: hidden;
+  border: 1px solid var(--border);
+}
+.cta-form input {
+  flex: 1; background: var(--input-bg);
+  border: none; color: var(--text);
+  padding: 15px 22px; font-family: 'Sora', sans-serif;
+  font-size: .76rem; outline: none;
+  transition: background .4s;
+}
+.cta-form input::placeholder { color: var(--muted); }
+.cta-form button {
+  background: linear-gradient(145deg, var(--accent), var(--accent-dim));
+  border: none; color: var(--btn-text);
+  padding: 15px 28px; font-family: 'Sora', sans-serif;
+  font-size: .6rem; font-weight: 600;
+  letter-spacing: .2em; text-transform: uppercase;
+  cursor: pointer; transition: all .3s; white-space: nowrap;
+}
+[data-theme="light"] .cta-form button {
+  background: linear-gradient(145deg, #1A1710, #33302A);
+}
+.cta-form button:hover { filter: brightness(1.12); }
+
+/* ── FOOTER ── */
+footer {
+  padding: 56px 0 36px;
+  border-top: 1px solid var(--border);
+  background: var(--bg);
+  position: relative; z-index: 2;
+}
+.footer-top {
+  display: flex; justify-content: space-between;
+  align-items: flex-start; gap: 40px;
+  margin-bottom: 48px;
+}
+.ft-brand .logo-label { font-size: 1.1rem; margin-bottom: 10px; }
+.ft-tagline {
+  font-size: .72rem; color: var(--muted);
+  max-width: 240px; line-height: 1.85;
+}
+.ft-col h5 {
+  font-size: .54rem; letter-spacing: .3em;
+  text-transform: uppercase; color: var(--accent-dim);
+  margin-bottom: 18px; font-weight: 500;
+}
+.ft-col a {
+  display: block; font-size: .72rem;
+  color: var(--muted); margin-bottom: 10px;
+  transition: color .3s;
+}
+.ft-col a:hover { color: var(--accent-2); }
+[data-theme="light"] .ft-col a:hover { color: var(--accent); }
+
+.footer-bottom {
+  display: flex; justify-content: space-between; align-items: center;
+  padding-top: 24px; border-top: 1px solid var(--border);
+  font-size: .6rem; color: var(--muted);
+}
+.fb-legal { max-width: 520px; line-height: 1.85; font-size: .56rem; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1024px) {
+  .topbar { padding: 0 28px; }
+  .hero { padding: 120px 28px 80px; }
+  .container { padding: 0 28px; }
+  .hero-wrap { grid-template-columns: 1fr; gap: 50px; }
+  .hero-visual { height: 360px; }
+  .about-grid { grid-template-columns: 1fr; gap: 40px; }
+  .bento { grid-template-columns: 1fr; }
+  .bento-card.wide { grid-column: span 1; }
+  .stats-row { grid-template-columns: repeat(2, 1fr); gap: 30px; }
+  .footer-top { flex-wrap: wrap; }
+}
+@media (max-width: 640px) {
+  .topbar { padding: 0 20px; }
+  .nav-center { display: none; }
+  .hero { padding: 100px 20px 60px; }
+  .container { padding: 0 20px; }
+  .hero-title { font-size: 2.2rem; }
+  .hero-btns { flex-direction: column; align-items: flex-start; gap: 14px; }
+  .hero-visual { display: none; }
+  .stats-row { grid-template-columns: 1fr; }
+  .cta-form { flex-direction: column; border-radius: 0; }
+  .cta-form input, .cta-form button { border-radius: 10px; }
+  .footer-bottom { flex-direction: column; gap: 14px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<div class="topbar" id="topbar">
+  <div class="topbar-inner">
+    <a href="#" class="logo">
+      <div class="logo-icon">DIP</div>
+      <div class="logo-label" data-lang="de">D<i>I</i>P</div>
+      <div class="logo-label lang-hidden" data-lang="en">D<i>I</i>P</div>
+    </a>
+
+    <div class="nav-center">
+      <a href="#about" data-lang="de">Philosophie</a>
+      <a href="#about" class="lang-hidden" data-lang="en">Philosophy</a>
+      <a href="#features" data-lang="de">Modell</a>
+      <a href="#features" class="lang-hidden" data-lang="en">Model</a>
+      <a href="#stats" data-lang="de">Ergebnisse</a>
+      <a href="#stats" class="lang-hidden" data-lang="en">Results</a>
+    </div>
+
+    <div class="nav-right">
+      <div class="pill-switch">
+        <button type="button" class="active" data-switch="de">DE</button>
+        <button type="button" data-switch="en">EN</button>
+      </div>
+      <button class="icon-btn" id="themeToggle" aria-label="Toggle theme">
+        <svg class="ic-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+        <svg class="ic-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+      <button class="nav-btn" data-lang="de" onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})">Zugang</button>
+      <button class="nav-btn lang-hidden" data-lang="en" onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})">Access</button>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-wrap">
+    <div class="hero-left">
+      <div class="hero-badge" data-lang="de">
+        <div class="badge-dot"></div> Wachstumsmodell &mdash; Aktiv
+      </div>
+      <div class="hero-badge lang-hidden" data-lang="en">
+        <div class="badge-dot"></div> Growth Model &mdash; Active
+      </div>
+
+      <h1 class="hero-title" data-lang="de">
+        Digitale Reichweite.<br>
+        Reale <em>Wertsch&ouml;pfung.</em><br>
+        <span class="grad">Ein Modell.</span>
+      </h1>
+      <h1 class="hero-title lang-hidden" data-lang="en">
+        Digital Reach.<br>
+        Real <em>Value Creation.</em><br>
+        <span class="grad">One Model.</span>
+      </h1>
+
+      <p class="hero-desc" data-lang="de">
+        DIP verbindet performancebasiertes Marketing mit operativer Gesch&auml;ftst&auml;tigkeit &mdash; strukturiert, messbar und auf nachhaltiges Wachstum ausgerichtet.
+      </p>
+      <p class="hero-desc lang-hidden" data-lang="en">
+        DIP connects performance-based marketing with real business operations &mdash; structured, measurable, and built for sustainable growth.
+      </p>
+
+      <div class="hero-btns">
+        <button class="btn-fill" onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})">
+          <span data-lang="de">Mehr erfahren</span>
+          <span class="lang-hidden" data-lang="en">Learn More</span>
+        </button>
+        <button class="btn-text" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">
+          <span data-lang="de">Modell entdecken</span>
+          <span class="lang-hidden" data-lang="en">Explore</span>
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7h10M8 3l4 4-4 4"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="vis-card vis-main">
+        <div class="vc-label" data-lang="de">Performance-&Uuml;bersicht</div>
+        <div class="vc-label lang-hidden" data-lang="en">Performance Overview</div>
+        <div class="vc-bars">
+          <div class="vc-bar-row">
+            <div class="vc-bar-head"><span data-lang="de">Sichtbarkeit</span><span>92%</span></div>
+            <div class="vc-track"><div class="vc-fill" style="width:92%"></div></div>
+          </div>
+          <div class="vc-bar-row">
+            <div class="vc-bar-head"><span data-lang="de">Engagement</span><span>87%</span></div>
+            <div class="vc-track"><div class="vc-fill" style="width:87%"></div></div>
+          </div>
+          <div class="vc-bar-row">
+            <div class="vc-bar-head"><span data-lang="de">Operativ</span><span>95%</span></div>
+            <div class="vc-track"><div class="vc-fill" style="width:95%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vis-card vis-back">
+        <div class="vc-label">Ecosystem</div>
+        <div class="mini-stat-row">
+          <span class="ms-label" data-lang="de">Kan&auml;le</span><span class="ms-val">12+</span>
+        </div>
+        <div class="mini-stat-row">
+          <span class="ms-label">Netzwerk</span><span class="ms-val" data-lang="de">Aktiv</span>
+        </div>
+        <div class="mini-stat-row">
+          <span class="ms-label">&Ouml;kosystem</span><span class="ms-val">Sparissimo</span>
+        </div>
+      </div>
+
+      <div class="vis-card vis-float">
+        <div class="vc-metric">360&deg;</div>
+        <div class="vc-sub" data-lang="de">Abdeckung</div>
+        <div class="vc-sub lang-hidden" data-lang="en">Coverage</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-strip">
+  <div class="marquee-track">
+    <div class="marquee-item"><span class="mq-sym">SICHTBARKEIT</span> Digitale Kan&auml;le</div>
+    <div class="marquee-item"><span class="mq-sym">REICHWEITE</span> Nachfrageaufbau</div>
+    <div class="marquee-item"><span class="mq-sym">PERFORMANCE</span> Messbar</div>
+    <div class="marquee-item"><span class="mq-sym">&Ouml;KOSYSTEM</span> Sparissimo</div>
+    <div class="marquee-item"><span class="mq-sym">WACHSTUM</span> Operativ</div>
+    <div class="marquee-item"><span class="mq-sym">SICHTBARKEIT</span> Digitale Kan&auml;le</div>
+    <div class="marquee-item"><span class="mq-sym">REICHWEITE</span> Nachfrageaufbau</div>
+    <div class="marquee-item"><span class="mq-sym">PERFORMANCE</span> Messbar</div>
+    <div class="marquee-item"><span class="mq-sym">&Ouml;KOSYSTEM</span> Sparissimo</div>
+    <div class="marquee-item"><span class="mq-sym">WACHSTUM</span> Operativ</div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about" class="about-section">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-left">
+        <div class="stag" data-lang="de">Philosophie</div>
+        <div class="stag lang-hidden" data-lang="en">Philosophy</div>
+        <h2 data-lang="de">Digitale Aufmerksamkeit wird nicht dem <em>Zufall</em> &uuml;berlassen</h2>
+        <h2 class="lang-hidden" data-lang="en">Digital attention is never left to <em>chance</em></h2>
+        <div class="accent-bar"></div>
+      </div>
+      <div class="about-right">
+        <p data-lang="de">DIP beschreibt einen strukturierten Ansatz, bei dem digitale Sichtbarkeit, Kundenansprache und Nachfrageentwicklung nicht zuf&auml;llig entstehen, sondern gezielt aufgebaut werden &mdash; eingebettet in ein bestehendes Partner&ouml;kosystem mit realer Gesch&auml;ftst&auml;tigkeit.</p>
+        <p class="lang-hidden" data-lang="en">DIP describes a structured approach where digital visibility, customer engagement, and demand development don't happen by accident &mdash; they are built deliberately within an existing partner ecosystem with real business activity.</p>
+        <p data-lang="de">Der Fokus liegt nicht auf spekulativer Marktaktivit&auml;t, sondern auf operativer Umsetzung: messbare Kan&auml;le, nachvollziehbare Prozesse und wirtschaftliche Aktivit&auml;t mit klarem Bezug.</p>
+        <p class="lang-hidden" data-lang="en">The focus is not on speculative market activity, but on operational execution: measurable channels, transparent processes, and economic activity with clear purpose.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PARTNERS -->
+<div class="partners-bar">
+  <div class="container">
+    <div class="partners-label" data-lang="de">&Ouml;kosystem-Partner</div>
+    <div class="partners-label lang-hidden" data-lang="en">Ecosystem Partners</div>
+    <div class="partners-row">
+      <div class="partner-name">Sparissimo</div>
+      <div class="partner-name">DIP Capital</div>
+      <div class="partner-name">Digital Reach</div>
+      <div class="partner-name">Growth Partners</div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section id="features" class="features-section">
+  <div class="container">
+    <div class="features-header">
+      <div class="stag" data-lang="de">Das Modell</div>
+      <div class="stag lang-hidden" data-lang="en">The Model</div>
+      <h2 data-lang="de">Drei S&auml;ulen. <em>Ein Ziel.</em></h2>
+      <h2 class="lang-hidden" data-lang="en">Three Pillars. <em>One Goal.</em></h2>
+    </div>
+
+    <div class="bento">
+      <div class="bento-card">
+        <div class="bc-icon">&#9678;</div>
+        <div class="bc-name" data-lang="de">Digitale Sichtbarkeit</div>
+        <div class="bc-name lang-hidden" data-lang="en">Digital Visibility</div>
+        <div class="bc-desc" data-lang="de">Strukturierte Pr&auml;senz in Suchmaschinen, sozialen Medien und weiteren digitalen Kan&auml;len zur Unterst&uuml;tzung von Reichweite und Relevanz.</div>
+        <div class="bc-desc lang-hidden" data-lang="en">Structured presence across search engines, social media, and digital channels to support reach and relevance.</div>
+        <a href="#cta" class="bc-link" data-lang="de">Details auf Anfrage &rarr;</a>
+        <a href="#cta" class="bc-link lang-hidden" data-lang="en">Details on request &rarr;</a>
+      </div>
+      <div class="bento-card wide">
+        <div class="bc-icon">&#9670;</div>
+        <div class="bc-name" data-lang="de">Kundenansprache &amp; Engagement</div>
+        <div class="bc-name lang-hidden" data-lang="en">Customer Engagement</div>
+        <div class="bc-desc" data-lang="de">Digitale Kontaktpunkte und kundenzentrierte Kommunikation zur gezielten Nachfrageentwicklung im realwirtschaftlichen Umfeld.</div>
+        <div class="bc-desc lang-hidden" data-lang="en">Digital touchpoints and customer-centered communication for targeted demand development in a real commercial environment.</div>
+        <a href="#cta" class="bc-link" data-lang="de">Details auf Anfrage &rarr;</a>
+        <a href="#cta" class="bc-link lang-hidden" data-lang="en">Details on request &rarr;</a>
+      </div>
+      <div class="bento-card wide">
+        <div class="bc-icon">&#9733;</div>
+        <div class="bc-name" data-lang="de">Operativer Kontext</div>
+        <div class="bc-name lang-hidden" data-lang="en">Operational Context</div>
+        <div class="bc-desc" data-lang="de">Einbindung in Produkte, Dienstleistungen und Kundentransaktionen im Sparissimo-&Ouml;kosystem &mdash; nicht als spekulatives Marktprodukt.</div>
+        <div class="bc-desc lang-hidden" data-lang="en">Integration with products, services, and customer transactions within the Sparissimo ecosystem &mdash; not as a speculative market product.</div>
+        <a href="#cta" class="bc-link" data-lang="de">Details auf Anfrage &rarr;</a>
+        <a href="#cta" class="bc-link lang-hidden" data-lang="en">Details on request &rarr;</a>
+      </div>
+      <div class="bento-card">
+        <div class="bc-icon">&#10023;</div>
+        <div class="bc-name" data-lang="de">Performance-Marketing</div>
+        <div class="bc-name lang-hidden" data-lang="en">Performance Marketing</div>
+        <div class="bc-desc" data-lang="de">Datengetriebene Kampagnen mit messbaren Ergebnissen und kontinuierlicher Optimierung innerhalb des &Ouml;kosystems.</div>
+        <div class="bc-desc lang-hidden" data-lang="en">Data-driven campaigns with measurable results and continuous optimization within the ecosystem.</div>
+        <a href="#cta" class="bc-link" data-lang="de">Details auf Anfrage &rarr;</a>
+        <a href="#cta" class="bc-link lang-hidden" data-lang="en">Details on request &rarr;</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div id="stats" class="stats-strip">
+  <div class="container">
+    <div class="stats-row">
+      <div>
+        <div class="sr-val">12+</div>
+        <div class="sr-label" data-lang="de">Digitale Kan&auml;le</div>
+        <div class="sr-label lang-hidden" data-lang="en">Digital Channels</div>
+      </div>
+      <div>
+        <div class="sr-val">360&deg;</div>
+        <div class="sr-label" data-lang="de">Marketing-Abdeckung</div>
+        <div class="sr-label lang-hidden" data-lang="en">Marketing Coverage</div>
+      </div>
+      <div>
+        <div class="sr-val">24/7</div>
+        <div class="sr-label" data-lang="de">Digitale Pr&auml;senz</div>
+        <div class="sr-label lang-hidden" data-lang="en">Digital Presence</div>
+      </div>
+      <div>
+        <div class="sr-val">1</div>
+        <div class="sr-label" data-lang="de">Integriertes &Ouml;kosystem</div>
+        <div class="sr-label lang-hidden" data-lang="en">Integrated Ecosystem</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<section id="cta" class="cta-section">
+  <div class="cta-glow"></div>
+  <div class="cta-grid-bg"></div>
+  <div class="container cta-inner">
+    <div class="stag" data-lang="de">N&auml;chster Schritt</div>
+    <div class="stag lang-hidden" data-lang="en">Next Step</div>
+    <h2 data-lang="de">Bereit f&uuml;r den<br><em>n&auml;chsten Schritt?</em></h2>
+    <h2 class="lang-hidden" data-lang="en">Ready for the<br><em>next step?</em></h2>
+    <p class="cta-desc" data-lang="de">Detaillierte Informationen zum DIP-Modell sind auf Anfrage verf&uuml;gbar. Hinterlassen Sie Ihre E-Mail-Adresse.</p>
+    <p class="cta-desc lang-hidden" data-lang="en">Detailed information about the DIP model is available on request. Leave your email.</p>
+    <form class="cta-form" onsubmit="event.preventDefault(); alert('Vielen Dank! / Thank you!');">
+      <input type="email" placeholder="Ihre E-Mail-Adresse" required />
+      <button type="submit" data-lang="de">Anfragen</button>
+      <button type="submit" class="lang-hidden" data-lang="en">Request</button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="ft-brand">
+        <div class="logo-label" data-lang="de">D<i>I</i>P</div>
+        <p class="ft-tagline" data-lang="de">Digitale Reichweite in reale Wertsch&ouml;pfung.</p>
+        <p class="ft-tagline lang-hidden" data-lang="en">Digital reach into real value.</p>
+      </div>
+      <div class="ft-col">
+        <h5>Navigation</h5>
+        <a href="#about" data-lang="de">Philosophie</a>
+        <a href="#about" class="lang-hidden" data-lang="en">Philosophy</a>
+        <a href="#features" data-lang="de">Modell</a>
+        <a href="#features" class="lang-hidden" data-lang="en">Model</a>
+        <a href="#stats" data-lang="de">Ergebnisse</a>
+        <a href="#stats" class="lang-hidden" data-lang="en">Results</a>
+      </div>
+      <div class="ft-col">
+        <h5 data-lang="de">Rechtliches</h5>
+        <h5 class="lang-hidden" data-lang="en">Legal</h5>
+        <a href="#" data-lang="de">Impressum</a>
+        <a href="#" class="lang-hidden" data-lang="en">Legal Notice</a>
+        <a href="#" data-lang="de">Datenschutz</a>
+        <a href="#" class="lang-hidden" data-lang="en">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 DIP</span>
+      <p class="fb-legal" data-lang="de">Diese Website dient ausschlie&szlig;lich der allgemeinen Information. Kein &ouml;ffentliches Angebot oder Anlageberatung.</p>
+      <p class="fb-legal lang-hidden" data-lang="en">This website is for general information only. No public offering or investment advice.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Nav scroll
+const tb = document.getElementById('topbar');
+window.addEventListener('scroll', () => tb.classList.toggle('scrolled', window.scrollY > 50));
+
+// Language
+document.querySelectorAll('.pill-switch button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const lang = btn.dataset.switch;
+    document.querySelectorAll('.pill-switch button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('[data-lang]').forEach(el => {
+      el.classList.toggle('lang-hidden', el.dataset.lang !== lang);
+    });
+  });
+});
+
+// Theme
+const toggle = document.getElementById('themeToggle');
+const html = document.documentElement;
+const saved = localStorage.getItem('dip-theme-b');
+if (saved) html.setAttribute('data-theme', saved);
+toggle.addEventListener('click', () => {
+  const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('dip-theme-b', next);
+});
+
+// Fade-in
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; }});
+}, { threshold: .1 });
+document.querySelectorAll('.bento-card, .about-left, .about-right, .stats-row > div, .partner-name').forEach(el => {
+  el.style.opacity='0'; el.style.transform='translateY(20px)';
+  el.style.transition='opacity .6s ease, transform .6s ease';
+  obs.observe(el);
+});
+</script>
+</body>
+</html>
