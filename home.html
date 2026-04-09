@@ -1,0 +1,1477 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DIP — Digital Investment Program</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Montserrat:wght@300;400;500;600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* ── DARK THEME ── */
+  [data-theme="dark"] {
+    --gold:       #C9A96E;
+    --gold-light: #E8D5A3;
+    --gold-dim:   #8A6E3E;
+    --gold-glow:  rgba(201,169,110,0.18);
+    --obsidian:   #080A0D;
+    --deep:       #0D0F14;
+    --surface:    #121620;
+    --panel:      #181D28;
+    --border:     rgba(201,169,110,0.15);
+    --border-hi:  rgba(201,169,110,0.35);
+    --text:       #E8E2D6;
+    --muted:      #7A7669;
+    --white:      #F5F0E8;
+    --nav-bg:     rgba(8,10,13,0.95);
+    --nav-scroll: rgba(8,10,13,0.92);
+    --card-bg:    rgba(18,22,32,0.85);
+    --input-bg:   rgba(255,255,255,0.04);
+    --green:      #4ade80;
+    --red:        #f87171;
+    --btn-text:   var(--obsidian);
+    --noise-opacity: 0.04;
+    --hero-grad-1: rgba(201,169,110,0.06);
+    --hero-grad-2: rgba(201,169,110,0.04);
+    --grid-opacity: 0.04;
+    --orb-opacity: 0.12;
+    --orb-border: 0.08;
+    --orb-inner: 0.1;
+    --orb-core: 0.15;
+    --scrollbar-track: #080A0D;
+    --toggle-bg: rgba(201,169,110,0.1);
+    --toggle-border: rgba(201,169,110,0.25);
+  }
+
+  /* ── LIGHT THEME ── */
+  [data-theme="light"] {
+    --gold:       #8A6E3E;
+    --gold-light: #6B5530;
+    --gold-dim:   #A68B5B;
+    --gold-glow:  rgba(138,110,62,0.12);
+    --obsidian:   #FAFAF7;
+    --deep:       #F3F1EC;
+    --surface:    #EBE8E1;
+    --panel:      #E4E0D8;
+    --border:     rgba(138,110,62,0.18);
+    --border-hi:  rgba(138,110,62,0.35);
+    --text:       #2C2A25;
+    --muted:      #7A7669;
+    --white:      #1A1814;
+    --nav-bg:     rgba(250,250,247,0.95);
+    --nav-scroll: rgba(250,250,247,0.92);
+    --card-bg:    rgba(235,232,225,0.9);
+    --input-bg:   rgba(0,0,0,0.04);
+    --green:      #16a34a;
+    --red:        #dc2626;
+    --btn-text:   #FAFAF7;
+    --noise-opacity: 0.025;
+    --hero-grad-1: rgba(138,110,62,0.06);
+    --hero-grad-2: rgba(138,110,62,0.03);
+    --grid-opacity: 0.06;
+    --orb-opacity: 0.08;
+    --orb-border: 0.06;
+    --orb-inner: 0.07;
+    --orb-core: 0.1;
+    --scrollbar-track: #FAFAF7;
+    --toggle-bg: rgba(138,110,62,0.08);
+    --toggle-border: rgba(138,110,62,0.2);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--obsidian);
+    color: var(--text);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: none;
+    transition: background .4s ease, color .4s ease;
+  }
+
+  /* ── Custom Cursor ── */
+  .cursor {
+    position: fixed; top: 0; left: 0; z-index: 9999;
+    pointer-events: none;
+  }
+  .cursor-dot {
+    width: 6px; height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    transition: transform .1s;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    transition: all .25s ease;
+    opacity: .5;
+  }
+  body:hover .cursor-ring { opacity: 1; }
+
+  /* ── Noise Overlay ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 1;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: var(--noise-opacity);
+    pointer-events: none;
+  }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { background: var(--scrollbar-track); }
+  ::-webkit-scrollbar-thumb { background: var(--gold-dim); }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 28px 60px;
+    background: linear-gradient(to bottom, var(--nav-bg) 0%, transparent 100%);
+    backdrop-filter: blur(0px);
+    transition: all .4s;
+  }
+  nav.scrolled {
+    padding: 18px 60px;
+    background: var(--nav-scroll);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  .logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--gold-light);
+    letter-spacing: .08em;
+    text-decoration: none;
+  }
+  .logo span { color: var(--gold); font-style: italic; }
+  .nav-links { display: flex; gap: 40px; list-style: none; }
+  .nav-links a {
+    text-decoration: none;
+    color: var(--muted);
+    font-size: .72rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    transition: color .3s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute; bottom: -4px; left: 0;
+    width: 0; height: 1px;
+    background: var(--gold);
+    transition: width .3s;
+  }
+  .nav-links a:hover { color: var(--gold-light); }
+  .nav-links a:hover::after { width: 100%; }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  /* Theme Toggle */
+  .theme-toggle {
+    background: var(--toggle-bg);
+    border: 1px solid var(--toggle-border);
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: none;
+    transition: all .3s ease;
+    color: var(--gold);
+    padding: 0;
+  }
+  .theme-toggle:hover {
+    background: var(--gold);
+    color: var(--btn-text);
+    border-color: var(--gold);
+  }
+  .theme-toggle svg { width: 18px; height: 18px; transition: transform .3s ease; }
+  .theme-toggle:hover svg { transform: rotate(15deg); }
+  .icon-sun, .icon-moon { display: none; }
+  [data-theme="dark"] .icon-sun { display: block; }
+  [data-theme="light"] .icon-moon { display: block; }
+
+  .nav-cta {
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 10px 28px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: .7rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    cursor: none;
+    transition: all .3s;
+  }
+  .nav-cta:hover {
+    background: var(--gold);
+    color: var(--btn-text);
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    position: relative;
+    overflow: hidden;
+    padding: 0 60px;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 70% 50%, var(--hero-grad-1) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 20% 80%, var(--hero-grad-2) 0%, transparent 60%),
+      linear-gradient(135deg, var(--obsidian) 0%, var(--deep) 50%, var(--obsidian) 100%);
+    transition: background .4s ease;
+  }
+
+  /* Gold grid lines */
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(201,169,110, var(--grid-opacity)) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,169,110, var(--grid-opacity)) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+  }
+
+  /* Floating orb */
+  .hero-orb {
+    position: absolute;
+    right: 8%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 520px; height: 520px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(201,169,110, var(--orb-opacity)) 0%, transparent 70%);
+    border: 1px solid rgba(201,169,110, var(--orb-border));
+    animation: orbPulse 6s ease-in-out infinite;
+  }
+  .hero-orb::before {
+    content: '';
+    position: absolute; inset: 30px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,169,110, var(--orb-inner));
+    animation: orbPulse 6s ease-in-out infinite reverse;
+  }
+  .hero-orb::after {
+    content: '';
+    position: absolute; inset: 80px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,169,110, var(--orb-core));
+    animation: orbPulse 4s ease-in-out infinite;
+  }
+  @keyframes orbPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: .7; }
+  }
+
+  /* Diagonal accent line */
+  .hero-line {
+    position: absolute;
+    top: 0; right: 30%;
+    width: 1px; height: 100%;
+    background: linear-gradient(to bottom, transparent, rgba(201,169,110,0.2) 30%, rgba(201,169,110,0.2) 70%, transparent);
+  }
+
+  .hero-content {
+    position: relative; z-index: 2;
+    max-width: 680px;
+  }
+
+  .hero-eyebrow {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 36px;
+    opacity: 0;
+    animation: fadeUp .8s .2s forwards;
+  }
+  .eyebrow-line {
+    width: 48px; height: 1px;
+    background: var(--gold);
+  }
+  .eyebrow-text {
+    font-size: .65rem;
+    letter-spacing: .35em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3.2rem, 6vw, 5.5rem);
+    font-weight: 300;
+    line-height: 1.08;
+    color: var(--white);
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp .9s .4s forwards;
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--gold-light);
+  }
+  .hero-title strong {
+    font-weight: 600;
+    display: block;
+    background: linear-gradient(90deg, var(--gold-light), var(--gold), var(--gold-dim));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: .85rem;
+    line-height: 1.9;
+    color: var(--muted);
+    max-width: 440px;
+    margin-bottom: 52px;
+    font-weight: 300;
+    opacity: 0;
+    animation: fadeUp .9s .6s forwards;
+  }
+
+  .hero-actions {
+    display: flex; align-items: center; gap: 32px;
+    opacity: 0;
+    animation: fadeUp .9s .8s forwards;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dim) 100%);
+    color: var(--btn-text);
+    border: none;
+    padding: 16px 44px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    cursor: none;
+    position: relative;
+    overflow: hidden;
+    transition: all .3s;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-primary::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 100%);
+    opacity: 0;
+    transition: opacity .3s;
+  }
+  .btn-primary:hover::before { opacity: 1; }
+  .btn-primary span { position: relative; z-index: 1; }
+  .btn-ghost {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: .72rem;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    cursor: none;
+    display: flex; align-items: center; gap: 10px;
+    transition: color .3s;
+  }
+  .btn-ghost:hover { color: var(--gold-light); }
+  .btn-ghost svg { transition: transform .3s; }
+  .btn-ghost:hover svg { transform: translateX(4px); }
+
+  /* Hero floating stat cards */
+  .hero-stats {
+    position: absolute;
+    right: 60px;
+    bottom: 14%;
+    display: flex; gap: 16px;
+    opacity: 0;
+    animation: fadeUp .9s 1s forwards;
+    z-index: 2;
+  }
+  .stat-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(20px);
+    padding: 22px 28px;
+    min-width: 140px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color .3s, transform .3s, background .4s;
+  }
+  .stat-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .stat-card:hover {
+    border-color: var(--border-hi);
+    transform: translateY(-4px);
+  }
+  .stat-val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem;
+    font-weight: 600;
+    color: var(--gold-light);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-label {
+    font-size: .6rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .stat-badge {
+    position: absolute; top: 14px; right: 14px;
+    font-size: .58rem;
+    color: var(--green);
+    letter-spacing: .1em;
+  }
+
+  /* ── TICKER ── */
+  .ticker-wrap {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+    padding: 14px 0;
+    position: relative;
+    z-index: 2;
+    transition: background .4s ease;
+  }
+  .ticker {
+    display: flex;
+    gap: 0;
+    animation: ticker 28s linear infinite;
+    white-space: nowrap;
+  }
+  .ticker-item {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 0 48px;
+    font-family: 'DM Mono', monospace;
+    font-size: .7rem;
+    color: var(--muted);
+    border-right: 1px solid var(--border);
+  }
+  .ticker-item:last-child { border-right: none; }
+  .ticker-sym { color: var(--gold); font-size: .65rem; letter-spacing: .1em; }
+  .ticker-up { color: var(--green); }
+  .ticker-down { color: var(--red); }
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* ── SECTION SHARED ── */
+  section { position: relative; z-index: 2; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 60px; }
+  .section-eyebrow {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 20px;
+  }
+  .section-tag {
+    font-size: .62rem;
+    letter-spacing: .3em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.2rem, 4vw, 3.4rem);
+    font-weight: 300;
+    line-height: 1.15;
+    color: var(--white);
+  }
+  .section-title em { font-style: italic; color: var(--gold-light); }
+  .gold-rule {
+    width: 60px; height: 1px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+    margin: 28px 0;
+  }
+
+  /* ── HOW IT WORKS ── */
+  .how-section { padding: 130px 0; }
+  .how-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    margin-top: 80px;
+  }
+  .how-steps { display: flex; flex-direction: column; gap: 0; }
+  .step {
+    display: flex; gap: 32px;
+    padding: 36px 0;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    transition: all .3s;
+    cursor: default;
+  }
+  .step:first-child { border-top: 1px solid var(--border); }
+  .step:hover { padding-left: 8px; }
+  .step-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3rem;
+    font-weight: 300;
+    color: var(--border-hi);
+    line-height: 1;
+    min-width: 60px;
+    transition: color .3s;
+  }
+  .step:hover .step-num { color: var(--gold); }
+  .step-body h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 10px;
+  }
+  .step-body p {
+    font-size: .8rem;
+    line-height: 1.85;
+    color: var(--muted);
+  }
+
+  /* Visual panel */
+  .how-visual {
+    position: relative;
+    height: 520px;
+  }
+  .how-card-main {
+    position: absolute;
+    top: 0; right: 0;
+    width: 85%;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 36px;
+    z-index: 2;
+    transition: background .4s ease;
+  }
+  .how-card-main::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+  }
+  .card-label {
+    font-size: .6rem; letter-spacing: .25em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 20px;
+  }
+  .portfolio-bar-wrap { margin-bottom: 28px; }
+  .portfolio-bar-label {
+    display: flex; justify-content: space-between;
+    font-size: .72rem; color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .portfolio-bar-label span:last-child { color: var(--gold); font-family: 'DM Mono', monospace; }
+  .portfolio-bar {
+    height: 4px;
+    background: rgba(201,169,110,0.12);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .portfolio-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+    border-radius: 2px;
+    animation: barGrow 1.5s ease forwards;
+    transform-origin: left;
+    transform: scaleX(0);
+  }
+  @keyframes barGrow { to { transform: scaleX(1); } }
+  .return-highlight {
+    display: flex; align-items: flex-end; gap: 12px;
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+  .return-big {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3.2rem; font-weight: 600;
+    color: var(--gold-light);
+    line-height: 1;
+  }
+  .return-meta { font-size: .7rem; color: var(--muted); line-height: 1.6; }
+  .return-meta strong { color: var(--green); display: block; font-family: 'DM Mono', monospace; }
+
+  .how-card-back {
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 65%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 28px;
+    z-index: 1;
+    transition: background .4s ease;
+  }
+  .mini-stat-row {
+    display: flex; justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .mini-stat-row:last-child { margin-bottom: 0; }
+  .mini-label { font-size: .65rem; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); }
+  .mini-val { font-family: 'DM Mono', monospace; font-size: .82rem; color: var(--text); }
+
+  /* ── PLANS ── */
+  .plans-section { padding: 130px 0; background: var(--deep); transition: background .4s ease; }
+  .plans-header { text-align: center; margin-bottom: 80px; }
+  .plans-header .gold-rule { margin: 28px auto; }
+  .plans-header p { font-size: .85rem; color: var(--muted); max-width: 440px; margin: 0 auto; line-height: 1.9; }
+  .plans-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: var(--border);
+  }
+  .plan {
+    background: var(--deep);
+    padding: 52px 40px;
+    position: relative;
+    transition: all .4s;
+    overflow: hidden;
+  }
+  .plan.featured {
+    background: var(--panel);
+  }
+  .plan::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 1px;
+    background: transparent;
+    transition: background .4s;
+  }
+  .plan.featured::before, .plan:hover::before {
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .plan-badge {
+    display: inline-block;
+    font-size: .58rem; letter-spacing: .25em; text-transform: uppercase;
+    color: var(--btn-text);
+    background: var(--gold);
+    padding: 4px 14px;
+    margin-bottom: 32px;
+  }
+  .plan-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem; font-weight: 400;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+  .plan-min {
+    font-size: .7rem; letter-spacing: .15em; text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 36px;
+  }
+  .plan-rate {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 4rem; font-weight: 600;
+    color: var(--gold-light);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .plan-rate-sub {
+    font-size: .72rem; color: var(--muted);
+    margin-bottom: 44px;
+  }
+  .plan-features { list-style: none; margin-bottom: 48px; }
+  .plan-features li {
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 10px 0;
+    font-size: .78rem;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    line-height: 1.6;
+  }
+  .plan-features li:last-child { border-bottom: none; }
+  .plan-features li::before {
+    content: '\u25C6';
+    font-size: .45rem;
+    color: var(--gold);
+    margin-top: 5px;
+    flex-shrink: 0;
+  }
+  .plan-btn {
+    width: 100%;
+    padding: 14px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: .68rem;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    cursor: none;
+    transition: all .3s;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+  }
+  .plan.featured .plan-btn, .plan:hover .plan-btn {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+  .plan.featured .plan-btn:hover, .plan:hover .plan-btn:hover {
+    background: var(--gold);
+    color: var(--btn-text);
+  }
+
+  /* ── NUMBERS ── */
+  .numbers-section { padding: 120px 0; }
+  .numbers-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .number-item {
+    background: var(--obsidian);
+    padding: 56px 40px;
+    position: relative;
+    overflow: hidden;
+    transition: background .3s;
+  }
+  .number-item:hover { background: var(--surface); }
+  .number-item::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0;
+    width: 0; height: 1px;
+    background: var(--gold);
+    transition: width .4s;
+  }
+  .number-item:hover::after { width: 100%; }
+  .num-val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3.6rem; font-weight: 600;
+    color: var(--gold-light);
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+  .num-label {
+    font-size: .68rem; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* ── TESTIMONIALS ── */
+  .testi-section { padding: 130px 0; background: var(--deep); transition: background .4s ease; }
+  .testi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 80px;
+  }
+  .testi-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 44px 36px;
+    position: relative;
+    transition: all .3s;
+  }
+  .testi-card:hover {
+    border-color: var(--border-hi);
+    transform: translateY(-6px);
+  }
+  .testi-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3.5rem;
+    color: var(--gold);
+    line-height: .5;
+    margin-bottom: 24px;
+    opacity: .4;
+  }
+  .testi-text {
+    font-size: .82rem;
+    line-height: 1.95;
+    color: var(--muted);
+    margin-bottom: 36px;
+    font-style: italic;
+  }
+  .testi-author {
+    display: flex; align-items: center; gap: 16px;
+  }
+  .testi-avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold-dim), var(--gold));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem; font-weight: 600;
+    color: var(--btn-text);
+  }
+  .testi-name {
+    font-size: .78rem; font-weight: 500;
+    color: var(--text); margin-bottom: 2px;
+  }
+  .testi-role { font-size: .65rem; letter-spacing: .1em; color: var(--muted); }
+  .testi-return {
+    position: absolute; top: 36px; right: 36px;
+    font-family: 'DM Mono', monospace;
+    font-size: .72rem;
+    color: var(--green);
+  }
+
+  /* ── CTA ── */
+  .cta-section {
+    padding: 160px 0;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
+  .cta-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 80% at 50% 50%, var(--gold-glow) 0%, transparent 70%),
+      var(--obsidian);
+    transition: background .4s ease;
+  }
+  .cta-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(201,169,110, var(--grid-opacity)) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,169,110, var(--grid-opacity)) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .cta-content { position: relative; z-index: 2; }
+  .cta-eyebrow {
+    display: flex; align-items: center; justify-content: center; gap: 20px;
+    margin-bottom: 40px;
+  }
+  .cta-line { width: 80px; height: 1px; background: var(--gold); opacity: .4; }
+  .cta-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.8rem, 5vw, 4.8rem);
+    font-weight: 300;
+    color: var(--white);
+    line-height: 1.1;
+    margin-bottom: 32px;
+  }
+  .cta-title em { font-style: italic; color: var(--gold-light); }
+  .cta-sub {
+    font-size: .85rem;
+    color: var(--muted);
+    max-width: 480px;
+    margin: 0 auto 56px;
+    line-height: 1.9;
+  }
+  .cta-form {
+    display: flex; gap: 0;
+    max-width: 460px;
+    margin: 0 auto;
+  }
+  .cta-input {
+    flex: 1;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-right: none;
+    color: var(--text);
+    padding: 16px 24px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: .78rem;
+    outline: none;
+    transition: border-color .3s;
+  }
+  .cta-input::placeholder { color: var(--muted); }
+  .cta-input:focus { border-color: var(--gold-dim); }
+  .cta-submit {
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dim) 100%);
+    border: none;
+    color: var(--btn-text);
+    padding: 16px 32px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: .68rem;
+    font-weight: 600;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    cursor: none;
+    transition: all .3s;
+    white-space: nowrap;
+  }
+  .cta-submit:hover {
+    background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 100%);
+  }
+  .cta-disclaimer {
+    margin-top: 20px;
+    font-size: .62rem;
+    letter-spacing: .08em;
+    color: var(--muted);
+    opacity: .6;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--obsidian);
+    border-top: 1px solid var(--border);
+    padding: 80px 60px 40px;
+    position: relative; z-index: 2;
+    transition: background .4s ease;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 60px;
+    margin-bottom: 60px;
+  }
+  .footer-brand .logo { display: block; margin-bottom: 20px; }
+  .footer-brand p {
+    font-size: .78rem; line-height: 1.8;
+    color: var(--muted); max-width: 280px;
+  }
+  .footer-col h4 {
+    font-size: .62rem; letter-spacing: .3em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 24px;
+  }
+  .footer-col a {
+    display: block;
+    font-size: .78rem;
+    color: var(--muted);
+    text-decoration: none;
+    margin-bottom: 12px;
+    transition: color .3s;
+  }
+  .footer-col a:hover { color: var(--gold-light); }
+  .footer-bottom {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 40px;
+    border-top: 1px solid var(--border);
+    font-size: .65rem;
+    letter-spacing: .1em;
+    color: var(--muted);
+    opacity: .5;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity .8s ease, transform .8s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 20px 24px; }
+    nav.scrolled { padding: 14px 24px; }
+    .nav-links { display: none; }
+    .hero { padding: 0 24px; }
+    .hero-orb { display: none; }
+    .hero-stats { position: static; margin-top: 40px; flex-wrap: wrap; }
+    .container { padding: 0 24px; }
+    .how-grid { grid-template-columns: 1fr; gap: 60px; }
+    .how-visual { display: none; }
+    .plans-grid { grid-template-columns: 1fr; gap: 2px; }
+    .numbers-grid { grid-template-columns: 1fr 1fr; }
+    .testi-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+    .cta-form { flex-direction: column; }
+    .cta-input { border-right: 1px solid var(--border); }
+    footer { padding: 60px 24px 32px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Cursor -->
+<div class="cursor" id="cursor">
+  <div class="cursor-ring" id="cursorRing"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="logo">DIP<span>.trading</span></a>
+  <ul class="nav-links">
+    <li><a href="#how">Features</a></li>
+    <li><a href="#plans">Investments</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#trust">Testimonials</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+      <!-- Sun icon (shown in dark mode → click to go light) -->
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="5"/>
+        <line x1="12" y1="1" x2="12" y2="3"/>
+        <line x1="12" y1="21" x2="12" y2="23"/>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+        <line x1="1" y1="12" x2="3" y2="12"/>
+        <line x1="21" y1="12" x2="23" y2="12"/>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </svg>
+      <!-- Moon icon (shown in light mode → click to go dark) -->
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </button>
+    <a href="login.html" class="nav-links" style="display:inline;padding:0;"><span style="font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);transition:color .3s;">Sign In</span></a>
+    <a href="login.html#signup" class="nav-cta">Get Started</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-line"></div>
+  <div class="hero-orb"></div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <span class="eyebrow-line"></span>
+      <span class="eyebrow-text">Digital Revenue Streams</span>
+    </div>
+    <h1 class="hero-title">
+      Participate in <em>Digital</em><br>
+      <strong>Revenue Streams.</strong>
+    </h1>
+    <p class="hero-sub">
+      Connects partners to real economic activity generated through online commerce and advertising. Participate in digital revenue streams generated through advertising and online consumption.
+    </p>
+    <div class="hero-actions">
+      <a href="#plans" class="btn-primary"><span>View Packages</span></a>
+      <button class="btn-ghost">
+        Explore Features
+        <svg width="18" height="12" viewBox="0 0 18 12" fill="none">
+          <path d="M0 6h16M11 1l5 5-5 5" stroke="currentColor" stroke-width="1.2"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat-card">
+      <div class="stat-val">Secure</div>
+      <div class="stat-label">Platform</div>
+      <div class="stat-badge">&uarr; Live</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" data-count="70" data-suffix="K+">0</div>
+      <div class="stat-label">Happy Investors</div>
+      <div class="stat-badge">&uarr; Growing</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val">Returns</div>
+      <div class="stat-label">Revenue Sharing</div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker" id="ticker">
+    <div class="ticker-item"><span class="ticker-sym">DIP</span> Digital Revenue <span class="ticker-up">+Live</span></div>
+    <div class="ticker-item"><span class="ticker-sym">ADS</span> Ad Network <span class="ticker-up">+Active</span></div>
+    <div class="ticker-item"><span class="ticker-sym">DCOM</span> Digital Commerce <span class="ticker-up">+Growing</span></div>
+    <div class="ticker-item"><span class="ticker-sym">REV</span> Revenue Sharing <span class="ticker-up">+Scalable</span></div>
+    <div class="ticker-item"><span class="ticker-sym">PART</span> 70K+ Partners <span class="ticker-up">+Expanding</span></div>
+    <div class="ticker-item"><span class="ticker-sym">MKT</span> Digital Markets <span class="ticker-up">+Transparent</span></div>
+    <div class="ticker-item"><span class="ticker-sym">REF</span> Referral Network <span class="ticker-up">+Organic</span></div>
+    <div class="ticker-item"><span class="ticker-sym">DIP</span> Digital Revenue <span class="ticker-up">+Live</span></div>
+    <div class="ticker-item"><span class="ticker-sym">ADS</span> Ad Network <span class="ticker-up">+Active</span></div>
+    <div class="ticker-item"><span class="ticker-sym">DCOM</span> Digital Commerce <span class="ticker-up">+Growing</span></div>
+    <div class="ticker-item"><span class="ticker-sym">REV</span> Revenue Sharing <span class="ticker-up">+Scalable</span></div>
+    <div class="ticker-item"><span class="ticker-sym">PART</span> 70K+ Partners <span class="ticker-up">+Expanding</span></div>
+    <div class="ticker-item"><span class="ticker-sym">MKT</span> Digital Markets <span class="ticker-up">+Transparent</span></div>
+    <div class="ticker-item"><span class="ticker-sym">REF</span> Referral Network <span class="ticker-up">+Organic</span></div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section class="how-section" id="how">
+  <div class="container">
+    <div class="section-eyebrow reveal">
+      <span class="eyebrow-line"></span>
+      <span class="section-tag">How The Model Works</span>
+    </div>
+    <h2 class="section-title reveal">Participation through<br><em>revenue sharing</em></h2>
+    <div class="gold-rule reveal"></div>
+
+    <div class="how-grid">
+      <div class="how-steps">
+        <div class="step reveal">
+          <div class="step-num">01</div>
+          <div class="step-body">
+            <h3>Digital Commerce</h3>
+            <p>Revenue is generated through the consumption of digital products and services. Every day millions of transactions are generated through online services, advertising networks and digital platforms.</p>
+          </div>
+        </div>
+        <div class="step reveal">
+          <div class="step-num">02</div>
+          <div class="step-body">
+            <h3>Advertising Participation</h3>
+            <p>Partners participate in revenue generated through advertising activities and digital marketing campaigns. DIP connects participants with these revenue flows through a structured model.</p>
+          </div>
+        </div>
+        <div class="step reveal">
+          <div class="step-num">03</div>
+          <div class="step-body">
+            <h3>Revenue Sharing</h3>
+            <p>Participants receive a share of the generated revenue streams according to the platform's participation model. This structure allows partners to benefit from the continuous growth of digital markets.</p>
+          </div>
+        </div>
+        <div class="step reveal">
+          <div class="step-num">04</div>
+          <div class="step-body">
+            <h3>Referral Network</h3>
+            <p>Participants can introduce new partners to the platform, expanding the reach of our ecosystem. For each successful referral, a one-time referral commission may be granted according to platform guidelines.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="how-visual reveal">
+        <div class="how-card-main">
+          <div class="card-label">Revenue Streams — Digital Ecosystem</div>
+          <div class="portfolio-bar-wrap">
+            <div class="portfolio-bar-label"><span>Ad Networks</span><span>Active</span></div>
+            <div class="portfolio-bar"><div class="portfolio-bar-fill" style="width:90%"></div></div>
+          </div>
+          <div class="portfolio-bar-wrap">
+            <div class="portfolio-bar-label"><span>Digital Commerce</span><span>Growing</span></div>
+            <div class="portfolio-bar"><div class="portfolio-bar-fill" style="width:78%;animation-delay:.2s"></div></div>
+          </div>
+          <div class="portfolio-bar-wrap">
+            <div class="portfolio-bar-label"><span>Online Services</span><span>Scalable</span></div>
+            <div class="portfolio-bar"><div class="portfolio-bar-fill" style="width:65%;animation-delay:.4s"></div></div>
+          </div>
+          <div class="portfolio-bar-wrap">
+            <div class="portfolio-bar-label"><span>Partner Network</span><span>Expanding</span></div>
+            <div class="portfolio-bar"><div class="portfolio-bar-fill" style="width:85%;animation-delay:.6s"></div></div>
+          </div>
+          <div class="return-highlight">
+            <div class="return-big">70K+</div>
+            <div class="return-meta">
+              <strong>&uarr; Growing daily</strong>
+              Happy investors across<br>the DIP ecosystem
+            </div>
+          </div>
+        </div>
+
+        <div class="how-card-back">
+          <div class="card-label">Core Concept</div>
+          <div class="mini-stat-row">
+            <span class="mini-label">Model</span>
+            <span class="mini-val">Revenue Sharing</span>
+          </div>
+          <div class="mini-stat-row">
+            <span class="mini-label">Approach</span>
+            <span class="mini-val" style="color:var(--gold)">Transparent</span>
+          </div>
+          <div class="mini-stat-row">
+            <span class="mini-label">Growth</span>
+            <span class="mini-val" style="color:var(--green)">Scalable</span>
+          </div>
+          <div class="mini-stat-row">
+            <span class="mini-label">Participation</span>
+            <span class="mini-val">Long-term</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLANS -->
+<section class="plans-section" id="plans">
+  <div class="container">
+    <div class="plans-header reveal">
+      <div class="section-eyebrow" style="justify-content:center">
+        <span class="eyebrow-line"></span>
+        <span class="section-tag">Marketing — Investment Opportunities</span>
+        <span class="eyebrow-line" style="background:linear-gradient(270deg,var(--gold),transparent)"></span>
+      </div>
+      <h2 class="section-title">Choose your<br><em>package</em></h2>
+      <div class="gold-rule"></div>
+      <p>Choose from our range of marketing packages tailored to your financial goals.</p>
+    </div>
+
+    <div class="plans-grid reveal">
+      <div class="plan">
+        <div class="plan-name">Long-Term</div>
+        <div class="plan-min">Min: $10,000 · Duration: 3 Years</div>
+        <div class="plan-rate">12%</div>
+        <div class="plan-rate-sub">Annual Return</div>
+        <ul class="plan-features">
+          <li>Long-term revenue participation</li>
+          <li>3-year structured duration</li>
+          <li>Transparent reporting dashboard</li>
+          <li>Revenue sharing from digital markets</li>
+          <li>Dedicated support</li>
+        </ul>
+        <a href="login.html#signup" class="plan-btn" style="display:block;text-align:center;text-decoration:none;">Start Investing</a>
+      </div>
+
+      <div class="plan featured">
+        <div class="plan-badge">Most Popular</div>
+        <div class="plan-name">Monthly</div>
+        <div class="plan-min">Min: $1,000 · Duration: 1 Year</div>
+        <div class="plan-rate">10%</div>
+        <div class="plan-rate-sub">Annual Return</div>
+        <ul class="plan-features">
+          <li>Monthly payout cycle</li>
+          <li>1-year participation duration</li>
+          <li>Full platform access</li>
+          <li>Ad revenue participation</li>
+          <li>Referral commission eligible</li>
+          <li>Real-time tracking</li>
+        </ul>
+        <a href="login.html#signup" class="plan-btn" style="display:block;text-align:center;text-decoration:none;">Start Investing</a>
+      </div>
+
+      <div class="plan">
+        <div class="plan-name">Weekly</div>
+        <div class="plan-min">Min: $5,000 · Duration: 24 Months</div>
+        <div class="plan-rate">0.25%</div>
+        <div class="plan-rate-sub">Weekly Return</div>
+        <ul class="plan-features">
+          <li>Weekly revenue distribution</li>
+          <li>24-month structured participation</li>
+          <li>Digital commerce revenue streams</li>
+          <li>Scalable participation model</li>
+          <li>Transparent ecosystem access</li>
+          <li>Priority partner support</li>
+        </ul>
+        <a href="login.html#signup" class="plan-btn" style="display:block;text-align:center;text-decoration:none;">Start Investing</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NUMBERS -->
+<section class="numbers-section" id="about">
+  <div class="container">
+    <div class="section-eyebrow reveal" style="margin-bottom:40px">
+      <span class="eyebrow-line"></span>
+      <span class="section-tag">About DIP</span>
+    </div>
+    <h2 class="section-title reveal" style="margin-bottom:20px">A modern participation model<br>for the <em>digital economy</em></h2>
+    <p class="reveal" style="font-size:.85rem;color:var(--muted);max-width:640px;line-height:1.9;margin-bottom:60px;">Digital consumption is continuously increasing worldwide. DIP connects participants with revenue flows through a revenue-sharing model based on real usage and consumption. Our goal is to create a structured environment where digital participation becomes simple, transparent and scalable.</p>
+    <div class="numbers-grid">
+      <div class="number-item reveal">
+        <div class="num-val">70K+</div>
+        <div class="num-label">Happy Investors<br>Worldwide</div>
+      </div>
+      <div class="number-item reveal">
+        <div class="num-val">12%</div>
+        <div class="num-label">Long-Term<br>Annual Return</div>
+      </div>
+      <div class="number-item reveal">
+        <div class="num-val">24/7</div>
+        <div class="num-label">Live Market<br>Data Access</div>
+      </div>
+      <div class="number-item reveal">
+        <div class="num-val">100%</div>
+        <div class="num-label">Transparent<br>Participation</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testi-section" id="trust">
+  <div class="container">
+    <div class="section-eyebrow reveal">
+      <span class="eyebrow-line"></span>
+      <span class="section-tag">Testimonials</span>
+    </div>
+    <h2 class="section-title reveal">What our marketing<br>investors <em>say</em></h2>
+    <div class="gold-rule reveal"></div>
+
+    <div class="testi-grid">
+      <div class="testi-card reveal">
+        <div class="testi-return">+12% annual</div>
+        <div class="testi-quote">&ldquo;</div>
+        <p class="testi-text">Digital Investment Program transformed my investment journey. The 12% annual returns have been consistent, and the platform is incredibly easy to use.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">SM</div>
+          <div>
+            <div class="testi-name">Sarah Mitchell</div>
+            <div class="testi-role">Real Estate Investor</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card reveal">
+        <div class="testi-return">+40% in 2yrs</div>
+        <div class="testi-quote">&ldquo;</div>
+        <p class="testi-text">I was skeptical at first, but after seeing my portfolio grow by 40% in just two years, I'm a believer. The referral program is a great bonus!</p>
+        <div class="testi-author">
+          <div class="testi-avatar">JR</div>
+          <div>
+            <div class="testi-name">James Rodriguez</div>
+            <div class="testi-role">Business Owner</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card reveal">
+        <div class="testi-return">Transparent</div>
+        <div class="testi-quote">&ldquo;</div>
+        <p class="testi-text">As someone who works in finance, I appreciate the transparency and security Digital Investment Program provides. The quarterly payouts are always on time.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">EC</div>
+          <div>
+            <div class="testi-name">Emily Chen</div>
+            <div class="testi-role">Financial Analyst</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-bg"></div>
+  <div class="cta-grid"></div>
+  <div class="container cta-content">
+    <div class="cta-eyebrow reveal">
+      <span class="cta-line"></span>
+      <span class="section-tag">Start Investing Today</span>
+      <span class="cta-line"></span>
+    </div>
+    <h2 class="cta-title reveal">Join the digital<br><em>revenue ecosystem.</em></h2>
+    <p class="cta-sub reveal">Join thousands of satisfied marketing investors who have generated revenue with dip.trading. Start your business free and explore our packages.</p>
+    <div class="cta-form reveal">
+      <input type="email" class="cta-input" placeholder="Your email address" />
+      <a href="login.html#signup" class="cta-submit" style="text-decoration:none;text-align:center;">Get Started</a>
+    </div>
+    <p class="cta-disclaimer reveal">DIP is a digital participation and revenue-sharing ecosystem · Not a financial product</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="#" class="logo">DIP<span>.trading</span></a>
+      <p>A digital participation and revenue-sharing ecosystem connected to advertising and digital commerce activities.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Platform</h4>
+      <a href="#">Features</a>
+      <a href="#">Investments</a>
+      <a href="#">Live Market Data</a>
+      <a href="#">Referral System</a>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a href="#">About DIP</a>
+      <a href="#">Our Vision</a>
+      <a href="#">Partners</a>
+      <a href="#">Contact</a>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Disclosure</a>
+      <a href="#">Contact</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>&copy; 2026 Digital Investment Program. All rights reserved.</span>
+    <span>DIP is not an investment platform, financial product or asset management service.</span>
+  </div>
+</footer>
+
+<script>
+  // ── Theme Toggle ──
+  const themeToggle = document.getElementById('themeToggle');
+  const root = document.documentElement;
+
+  // Load saved theme
+  const savedTheme = localStorage.getItem('dip-theme');
+  if (savedTheme) {
+    root.setAttribute('data-theme', savedTheme);
+  }
+
+  themeToggle.addEventListener('click', () => {
+    const current = root.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('dip-theme', next);
+  });
+
+  // ── Custom Cursor ──
+  const cursor = document.getElementById('cursor');
+  const dot = document.getElementById('cursorDot');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  function animateCursor() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    dot.style.left = mx + 'px'; dot.style.top = my + 'px';
+    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+  document.querySelectorAll('a,button,input').forEach(el => {
+    el.addEventListener('mouseenter', () => { ring.style.transform = 'translate(-50%,-50%) scale(1.6)'; ring.style.borderColor = 'var(--gold-light)'; });
+    el.addEventListener('mouseleave', () => { ring.style.transform = 'translate(-50%,-50%) scale(1)'; ring.style.borderColor = 'var(--gold)'; });
+  });
+
+  // ── Nav Scroll ──
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // ── Scroll Reveal ──
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        e.target.style.transitionDelay = (i % 4) * 0.1 + 's';
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => obs.observe(el));
+
+  // ── Counter Animation ──
+  function animateCount(el) {
+    const target = parseFloat(el.dataset.count);
+    const isDecimal = target % 1 !== 0;
+    const duration = 1800;
+    const start = performance.now();
+    function update(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 3);
+      const val = target * ease;
+      el.textContent = isDecimal ? val.toFixed(1) + '%' : Math.floor(val) + 'M+';
+      if (progress < 1) requestAnimationFrame(update);
+    }
+    requestAnimationFrame(update);
+  }
+  const statObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting && e.target.dataset.count) {
+        animateCount(e.target);
+        statObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('[data-count]').forEach(el => statObs.observe(el));
+</script>
+</body>
+</html>
+

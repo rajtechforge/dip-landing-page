@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DIP — My Investments</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Montserrat:wght@300;400;500;600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
+<style>
+
+/* ─────────────────────────────────────────
+   RESET & TOKENS
+───────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+[data-theme="dark"] {
+  --gold:            #C9A96E;
+  --gold-light:      #E8D5A3;
+  --gold-dim:        #8A6E3E;
+  --gold-glow:       rgba(201,169,110,0.18);
+  --obsidian:        #080A0D;
+  --deep:            #0D0F14;
+  --surface:         #121620;
+  --panel:           #181D28;
+  --border:          rgba(201,169,110,0.15);
+  --border-hi:       rgba(201,169,110,0.40);
+  --text:            #E8E2D6;
+  --muted:           #7A7669;
+  --white:           #F5F0E8;
+  --card-bg:         rgba(18,22,32,0.85);
+  --green:           #4ade80;
+  --red:             #f87171;
+  --blue:            #60a5fa;
+  --btn-text:        #080A0D;
+  --noise-opacity:   0.04;
+  --active-bg:       rgba(201,169,110,0.08);
+  --hover-bg:        rgba(201,169,110,0.05);
+  --scrollbar-track: #080A0D;
+  --toggle-bg:       rgba(201,169,110,0.10);
+  --toggle-border:   rgba(201,169,110,0.25);
+  --row-hover:       rgba(201,169,110,0.04);
+  --table-head-bg:   rgba(201,169,110,0.05);
+}
+[data-theme="light"] {
+  --gold:            #8A6E3E;
+  --gold-light:      #6B5530;
+  --gold-dim:        #A68B5B;
+  --gold-glow:       rgba(138,110,62,0.12);
+  --obsidian:        #FAFAF7;
+  --deep:            #F3F1EC;
+  --surface:         #EBE8E1;
+  --panel:           #E4E0D8;
+  --border:          rgba(138,110,62,0.18);
+  --border-hi:       rgba(138,110,62,0.45);
+  --text:            #2C2A25;
+  --muted:           #5C5852;
+  --white:           #1A1814;
+  --card-bg:         rgba(235,232,225,0.90);
+  --green:           #16a34a;
+  --red:             #dc2626;
+  --blue:            #2563eb;
+  --btn-text:        #FAFAF7;
+  --noise-opacity:   0.025;
+  --active-bg:       rgba(138,110,62,0.10);
+  --hover-bg:        rgba(138,110,62,0.06);
+  --scrollbar-track: #FAFAF7;
+  --toggle-bg:       rgba(138,110,62,0.10);
+  --toggle-border:   rgba(138,110,62,0.25);
+  --row-hover:       rgba(138,110,62,0.06);
+  --table-head-bg:   rgba(138,110,62,0.10);
+}
+
+/* ─────────────────────────────────────────
+   BASE
+───────────────────────────────────────── */
+html, body { height: 100%; overflow: hidden; }
+body {
+  background: var(--obsidian); color: var(--text);
+  font-family: 'Montserrat', sans-serif; font-weight: 300;
+  display: flex; transition: background .4s ease, color .4s ease;
+}
+body::before {
+  content: ''; position: fixed; inset: 0; z-index: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity: var(--noise-opacity); pointer-events: none;
+}
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: var(--scrollbar-track); }
+::-webkit-scrollbar-thumb { background: var(--gold-dim); }
+
+/* ─────────────────────────────────────────
+   CURSOR
+───────────────────────────────────────── */
+
+/* ─────────────────────────────────────────
+   SIDEBAR
+───────────────────────────────────────── */
+.sidebar{width:260px;min-width:260px;height:100vh;background:var(--panel);border-right:1px solid var(--border);display:flex;flex-direction:column;position:relative;z-index:20;flex-shrink:0;transition:background .4s,width .3s ease,min-width .3s ease;overflow:hidden}
+.sidebar::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),transparent)}
+.sidebar-brand{padding:24px 20px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:radial-gradient(ellipse at 20% 60%,rgba(201,169,110,0.09) 0%,transparent 65%)}
+.s-logo{text-decoration:none;display:flex;align-items:center;overflow:hidden;transition:opacity .2s}
+.sidebar-logo-img{width:145px;height:auto;object-fit:contain;transition:opacity .3s,width .3s}
+
+.collapse-btn{background:none;border:none;
+color:var(--muted);padding:6px;transition:color .3s;display:flex;flex-shrink:0}
+.collapse-btn:hover{color:var(--gold)}
+.collapse-btn svg{width:18px;height:18px}
+.sidebar-user{padding:16px 24px 8px;display:flex;align-items:center;gap:12px;flex-shrink:0;transition:padding .3s}
+.user-avatar{width:38px;height:38px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--gold-dim),var(--gold));display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:.95rem;font-weight:600;color:var(--btn-text)}
+.user-info{flex:1;min-width:0;overflow:hidden;transition:opacity .2s}
+.user-name{font-size:.78rem;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.user-status{display:flex;align-items:center;gap:5px;font-size:.6rem;letter-spacing:.08em;color:var(--muted);margin-top:2px}
+.status-dot{width:5px;height:5px;border-radius:50%;background:#4ade80;flex-shrink:0}
+.sidebar-nav{flex:1;overflow-y:auto;overflow-x:hidden;padding:20px 0 16px}
+.nav-section{margin-bottom:4px}
+.nav-section-label{font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:#9E9890;padding:0 14px;margin-bottom:6px;white-space:nowrap;overflow:hidden;transition:opacity .2s}
+.nav-item{display:flex;align-items:center;gap:12px;margin:2px 10px;border-radius:8px;padding:13px 14px;text-decoration:none;color:var(--muted);font-size:.75rem;letter-spacing:.06em;position:relative;
+transition:color .25s,background .25s,padding .3s;white-space:nowrap}
+.nav-item svg{width:17px;height:17px;flex-shrink:0;transition:color .25s}
+.nav-label{transition:opacity .2s;overflow:hidden}
+.nav-item:hover{color:var(--text);background:var(--hover-bg);border-radius:8px}
+.nav-item:hover svg{color:var(--gold)}
+.nav-item.active{color:var(--gold);background:rgba(201,169,110,0.13);font-weight:600;border-radius:8px;border-left:2px solid var(--gold);box-shadow:0 2px 20px rgba(201,169,110,0.10)}
+.nav-item.active svg{color:var(--gold)}
+
+.nav-badge{margin-left:auto;flex-shrink:0;font-size:.55rem;letter-spacing:.08em;background:rgba(201,169,110,0.15);color:var(--gold);padding:2px 7px;border-radius:20px;font-family:'Montserrat',sans-serif;transition:opacity .2s}
+.nav-divider{height:1px;background:var(--border);margin:6px 24px;transition:margin .3s}
+.sidebar-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:2px;flex-shrink:0;transition:padding .3s}
+.footer-item{display:flex;align-items:center;gap:12px;padding:10px 0;text-decoration:none;color:var(--muted);font-size:.72rem;letter-spacing:.06em;
+background:none;border:none;width:100%;text-align:left;transition:color .25s;white-space:nowrap;overflow:hidden}
+.footer-item svg{width:16px;height:16px;flex-shrink:0}
+.footer-item:hover{color:var(--gold)}
+.footer-item.logout:hover{color:#f87171;background:rgba(248,113,113,0.08);border-radius:6px;padding-left:6px}
+.theme-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0}
+.theme-label{display:flex;align-items:center;gap:12px;font-size:.72rem;letter-spacing:.06em;color:var(--muted);white-space:nowrap;overflow:hidden;transition:opacity .2s}
+.theme-label svg{width:16px;height:16px;flex-shrink:0}
+.theme-toggle-btn{background:var(--toggle-bg);border:1px solid var(--toggle-border);width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+transition:all .3s;color:var(--gold);padding:0}
+.theme-toggle-btn:hover{background:var(--gold);color:var(--btn-text);border-color:var(--gold)}
+.theme-toggle-btn svg{width:14px;height:14px}
+.icon-sun,.icon-moon{display:none}
+[data-theme="dark"] .icon-sun{display:block}
+[data-theme="light"] .icon-moon{display:block}
+[data-theme="light"] .nav-section-label{color:#7A7268}
+[data-theme="light"] .nav-item{color:#4A4640}
+[data-theme="light"] .footer-item{color:#5A5650}
+[data-theme="light"] .theme-label{color:#5A5650}
+[data-theme="light"] .sidebar{background:var(--surface);border-right-color:rgba(138,110,62,0.20)}
+.sidebar.collapsed{width:64px;min-width:64px}
+.sidebar.collapsed .sidebar-logo-img{opacity:0;width:0}.sidebar.collapsed .user-info,.sidebar.collapsed .nav-label,.sidebar.collapsed .nav-badge{opacity:0;width:0}
+
+.sidebar.collapsed .nav-section-label{opacity:0;height:0;margin:0;padding:0}
+.sidebar.collapsed .nav-item{margin:2px 8px;padding:12px;border-radius:8px;justify-content:center}
+.sidebar.collapsed .nav-item.active::before{opacity:0}
+.sidebar.collapsed .sidebar-brand{padding:24px 0;justify-content:center}
+.sidebar.collapsed .sidebar-user{padding:16px 0;justify-content:center}
+.sidebar.collapsed .sidebar-footer{padding:12px 0;align-items:center}
+.sidebar.collapsed .footer-item{padding:10px 0;justify-content:center}
+.sidebar.collapsed .footer-item span{opacity:0;width:0}
+.sidebar.collapsed .theme-row{justify-content:center}
+.sidebar.collapsed .theme-label{opacity:0;width:0}
+.sidebar.collapsed .theme-toggle-btn{display:none}
+.sidebar.collapsed .nav-divider{margin:6px 12px}
+
+/* ─────────────────────────────────────────
+   MAIN
+───────────────────────────────────────── */
+.main-content{flex:1;height:100vh;overflow-y:auto;overflow-x:hidden;position:relative;z-index:2}
+.main-content::before{content:'';position:sticky;top:0;left:0;right:0;height:1px;display:block;background:linear-gradient(90deg,var(--gold-dim),transparent 60%);opacity:.4;z-index:5}
+.top-bar{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:18px 48px;background:rgba(8,10,13,0.88);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);transition:background .4s}
+[data-theme="light"] .top-bar{background:rgba(250,250,247,0.90)}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.breadcrumb a{color:var(--muted);text-decoration:none;transition:color .25s}
+.breadcrumb a:hover{color:var(--gold)}
+.breadcrumb-sep{opacity:.4}
+.breadcrumb-current{color:var(--gold)}
+
+/* ─────────────────────────────────────────
+   PAGE
+───────────────────────────────────────── */
+.page-wrap { max-width: 1200px; margin: 0 auto; padding: 44px 48px 80px; }
+
+.page-header { margin-bottom: 32px; }
+.page-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2rem, 3vw, 2.8rem);
+  font-weight: 600; color: var(--white); line-height: 1.15; margin-bottom: 8px;
+}
+.page-subtitle { font-size: .8rem; color: var(--muted); line-height: 1.7; }
+
+/* ─────────────────────────────────────────
+   STAT CARDS
+───────────────────────────────────────── */
+.stat-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.stat-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+  overflow: hidden;
+  transition: border-color .3s, transform .3s, background .4s;
+}
+.stat-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--gold-dim), transparent);
+  transition: background .3s;
+}
+.stat-card:hover { border-color: var(--border-hi); transform: translateY(-3px); }
+.stat-card:hover::before { background: linear-gradient(90deg, var(--gold), transparent); }
+
+.stat-card-icon {
+  width: 36px; height: 36px; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 14px; flex-shrink: 0;
+  background: rgba(201,169,110,0.10); color: var(--gold);
+}
+.stat-card-icon svg { width: 17px; height: 17px; }
+
+.stat-card-number {
+  font-family: 'DM Mono', monospace;
+  font-size: 1.6rem;
+  font-weight: 600;
+  line-height: 1;
+  margin-bottom: 4px;
+  color: var(--white);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+.stat-card-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: .72rem;
+  color: var(--gold);
+  margin-bottom: 8px;
+  letter-spacing: .01em;
+}
+.stat-card-label {
+  font-size: .58rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ─────────────────────────────────────────
+   INVESTMENTS TABLE SECTION
+───────────────────────────────────────── */
+.investments-section {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  position: relative;
+  overflow: hidden;
+  transition: background .4s;
+}
+.investments-section::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  border-radius: 14px 14px 0 0;
+}
+
+.investments-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 28px 20px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.investments-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--white);
+}
+
+/* Filter tabs */
+.filter-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-tabs {
+  display: flex; align-items: center;
+  border: 1px solid var(--border);
+  overflow: hidden; flex-shrink: 0;
+}
+.filter-tab {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 8px 16px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: .65rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase;
+  border: none; border-right: 1px solid var(--border);
+  background: transparent; color: var(--muted);
+  transition: all .22s; white-space: nowrap;
+}
+.filter-tab:last-child { border-right: none; }
+.filter-tab:hover { color: var(--text); background: var(--hover-bg); }
+.filter-tab.active {
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dim) 100%);
+  color: var(--btn-text); border-right-color: var(--gold);
+}
+
+/* ── Table ── */
+.inv-table-wrap { overflow-x: auto; }
+.inv-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 780px;
+}
+.inv-table thead tr {
+  background: var(--table-head-bg);
+  border-bottom: 1px solid var(--border);
+}
+.inv-table th {
+  padding: 12px 14px;
+  font-size: .58rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+}
+.inv-table tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background .2s;
+}
+.inv-table tbody tr:last-child { border-bottom: none; }
+.inv-table tbody tr:hover { background: var(--row-hover); }
+.inv-table td {
+  padding: 14px 14px;
+  font-size: .76rem;
+  color: var(--muted);
+  vertical-align: middle;
+}
+
+/* Package cell */
+.pkg-cell { display: flex; align-items: center; gap: 12px; }
+.pkg-icon {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, #C9A96E, #8A6E3E);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.pkg-icon svg { width: 18px; height: 18px; color: #fff; }
+.pkg-name { font-size: .78rem; font-weight: 500; color: var(--text); white-space: normal; line-height: 1.35; }
+.inv-table th:first-child { width: 260px; min-width: 260px; }
+.inv-table td:first-child { width: 260px; min-width: 260px; max-width: 260px; }
+.pkg-cell > div { min-width: 0; overflow: hidden; }
+
+/* Amount */
+.amount-cell {
+  font-family: 'DM Mono', monospace;
+  font-size: .8rem;
+  font-weight: 400;
+  color: var(--text);
+}
+
+/* Plan details cell */
+.plan-details-cell { display: flex; flex-direction: column; gap: 6px; }
+.plan-detail-row   { display: flex; align-items: baseline; gap: 10px; }
+.plan-detail-lbl {
+  font-size: .53rem; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--muted); opacity: .65; min-width: 62px; flex-shrink: 0;
+}
+.plan-detail-val {
+  font-size: .72rem; color: var(--text);
+  font-family: 'DM Mono', monospace; letter-spacing: .01em;
+}
+.plan-detail-val.gold  { color: var(--gold); }
+.plan-detail-val.green { color: var(--green); }
+
+/* Status badge */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  font-size: .56rem;
+  letter-spacing: .09em;
+  font-weight: 500;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+.status-badge::before {
+  content: '';
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.status-badge.active-badge {
+  background: rgba(74,222,128,0.10);
+  color: var(--green);
+  border: 1px solid rgba(74,222,128,0.22);
+}
+.status-badge.active-badge::before { background: var(--green); }
+[data-theme="light"] .status-badge.active-badge {
+  background: rgba(22,163,74,0.10);
+  color: var(--green);
+  border: 1px solid rgba(22,163,74,0.20);
+}
+.status-badge.completed-badge {
+  background: rgba(148,163,184,0.10);
+  color: var(--muted);
+  border: 1px solid rgba(148,163,184,0.20);
+}
+.status-badge.completed-badge::before { background: var(--muted); }
+[data-theme="light"] .status-badge.completed-badge {
+  background: rgba(100,116,139,0.10);
+  color: var(--muted);
+  border: 1px solid rgba(100,116,139,0.20);
+}
+
+/* Action */
+.action-cell { text-align: right; }
+.view-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--gold);
+  font-family: 'Montserrat', sans-serif;
+  font-size: .68rem;
+  letter-spacing: .1em;
+  text-decoration: none;
+  transition: border-color .25s, background .25s, color .25s;
+}
+.view-btn svg { width: 13px; height: 13px; }
+.view-btn:hover { border-color: var(--gold); background: rgba(201,169,110,0.08); color: var(--gold-light); }
+
+
+
+/* Completed row dimming */
+.inv-table tbody tr.completed-row { opacity: .62; }
+.completed-row .duration-dates { text-decoration: line-through; text-decoration-color: rgba(255,255,255,0.25); }
+
+
+/* Empty state */
+.inv-empty {
+  padding: 64px 20px;
+  text-align: center;
+}
+.inv-empty-icon {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: rgba(201,169,110,0.07); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 16px;
+}
+.inv-empty-icon svg { width: 24px; height: 24px; color: var(--gold-dim); }
+.inv-empty-text { font-size: .78rem; color: var(--muted); margin-bottom: 4px; }
+.inv-empty-sub  { font-size: .68rem; color: var(--muted); opacity: .55; }
+
+/* ─────────────────────────────────────────
+   INVOICE MODAL
+───────────────────────────────────────── */
+/* ── Invoice modal overlay — must be on body, moved via JS ── */
+.inv-modal-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  opacity: 0; pointer-events: none;
+  transition: opacity .3s ease;
+}
+.inv-modal-overlay.open { opacity: 1; pointer-events: all; }
+
+.inv-modal {
+  background: var(--panel);
+  border: 1px solid var(--border-hi);
+  border-radius: 18px;
+  width: 100%; max-width: 480px;
+  position: relative; overflow: hidden;
+  transform: translateY(20px) scale(0.97);
+  transition: transform .35s cubic-bezier(.22,.61,.36,1);
+  box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(201,169,110,0.08);
+}
+.inv-modal-overlay.open .inv-modal { transform: translateY(0) scale(1); }
+
+/* Top gold line */
+.inv-modal::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+/* Header */
+.inv-modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 22px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.inv-modal-title {
+  display: flex; align-items: center; gap: 9px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: .72rem; font-weight: 600; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--muted);
+}
+.inv-modal-title svg { width: 16px; height: 16px; color: var(--gold); }
+.inv-modal-close {
+  background: none; border: none; cursor: none;
+  color: var(--muted); padding: 4px; transition: color .2s;
+  display: flex; align-items: center;
+}
+.inv-modal-close:hover { color: var(--red); }
+.inv-modal-close svg { width: 17px; height: 17px; }
+
+/* Body */
+.inv-modal-body { padding: 18px 22px 20px; display: flex; flex-direction: column; gap: 14px; }
+
+/* Invoice ID hero block */
+.inv-id-block { text-align: center; padding: 2px 0; }
+.inv-id-label { font-size: .56rem; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.inv-id-value {
+  font-family: 'DM Mono', monospace; font-size: 1.15rem; font-weight: 600;
+  color: var(--white); letter-spacing: .05em;
+}
+.inv-status-row { display: flex; justify-content: center; margin-top: 8px; }
+
+/* Package card */
+.inv-pkg-card {
+  display: flex; align-items: center; gap: 14px;
+  background: rgba(201,169,110,0.05);
+  border: 1px solid rgba(201,169,110,0.14);
+  border-radius: 12px; padding: 14px 16px;
+}
+.inv-pkg-card-icon {
+  width: 42px; height: 42px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.inv-pkg-card-icon svg { width: 20px; height: 20px; }
+.inv-pkg-card-name { font-size: .82rem; font-weight: 600; color: var(--text); line-height: 1.3; }
+.inv-pkg-card-type { font-size: .62rem; color: var(--muted); margin-top: 3px; letter-spacing: .06em; text-transform: uppercase; }
+
+/* Divider */
+.inv-divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+/* Detail rows */
+.inv-detail-rows { display: flex; flex-direction: column; gap: 13px; }
+.inv-detail-row-item {
+  display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;
+}
+.inv-detail-row-lbl { font-size: .68rem; color: var(--muted); padding-top: 1px; flex-shrink: 0; }
+.inv-detail-row-val {
+  display: flex; align-items: center; gap: 7px;
+  font-size: .74rem; color: var(--text);
+  font-family: 'DM Mono', monospace; text-align: right;
+  word-break: break-all;
+}
+.inv-detail-row-val svg { width: 13px; height: 13px; color: var(--gold); flex-shrink: 0; }
+
+/* Total row */
+.inv-total-row {
+  display: flex; justify-content: space-between; align-items: center;
+  background: rgba(201,169,110,0.07); border: 1px solid rgba(201,169,110,0.18);
+  border-radius: 10px; padding: 14px 16px;
+}
+.inv-total-lbl { font-size: .7rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.inv-total-val { font-family: 'DM Mono', monospace; font-size: 1.25rem; font-weight: 600; color: var(--gold); }
+
+/* Download button */
+.inv-download-btn {
+  width: 100%; padding: 13px;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dim) 100%);
+  border: none; border-radius: 10px;
+  color: var(--btn-text);
+  font-family: 'Montserrat', sans-serif; font-size: .68rem;
+  font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+  cursor: none; transition: all .25s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  position: relative; overflow: hidden;
+}
+.inv-download-btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 100%);
+  opacity: 0; transition: opacity .25s;
+}
+.inv-download-btn:hover::before { opacity: 1; }
+.inv-download-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(201,169,110,0.35); }
+.inv-download-btn span { position: relative; z-index: 1; }
+.inv-download-btn svg { width: 15px; height: 15px; position: relative; z-index: 1; }
+
+/* View payment button in table */
+.view-invoice-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 14px; background: none; border: 1px solid var(--border);
+  border-radius: 6px; color: var(--gold);
+  font-family: 'Montserrat', sans-serif; font-size: .65rem;
+  letter-spacing: .08em; cursor: none; white-space: nowrap;
+  transition: border-color .25s, background .25s;
+}
+.view-invoice-btn:hover { border-color: var(--gold); background: rgba(201,169,110,0.08); }
+.view-invoice-btn svg { width: 13px; height: 13px; }
+
+/* ─────────────────────────────────────────
+   REVEAL ANIMATION
+───────────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity .55s ease, transform .55s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Collapsed sidebar tooltips ─────────────────── */
+.sidebar.collapsed .nav-item[data-tooltip]{position:relative}
+.sidebar.collapsed .nav-item[data-tooltip]:hover::after{content:attr(data-tooltip);position:absolute;left:calc(100% + 10px);top:50%;transform:translateY(-50%);background:var(--deep);border:1px solid var(--border-hi);color:var(--text);font-size:.68rem;font-family:'Montserrat',sans-serif;letter-spacing:.05em;padding:6px 14px;border-radius:6px;white-space:nowrap;z-index:300;box-shadow:0 4px 20px rgba(0,0,0,0.5);pointer-events:none}
+
+
+/* Search bar */
+.top-search{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.04);border:1px solid var(--border);padding:8px 14px;min-width:220px;transition:border-color .25s}
+[data-theme="light"] .top-search{background:rgba(0,0,0,0.04)}
+.top-search:focus-within{border-color:var(--gold-dim)}
+.top-search svg{width:15px;height:15px;color:var(--muted);flex-shrink:0}
+.top-search input{background:none;border:none;outline:none;color:var(--text);font-family:'Montserrat',sans-serif;font-size:.75rem;flex:1;caret-color:var(--gold)}
+.top-search input::placeholder{color:var(--muted);opacity:.7}
+/* ── Top Bar Action Buttons ── */
+.top-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.action-btn{width:38px;height:38px;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--muted);display:flex;align-items:center;justify-content:center;transition:all .25s;position:relative;flex-shrink:0}
+[data-theme="light"] .action-btn{background:rgba(0,0,0,0.04)}
+.action-btn:hover{border-color:var(--border-hi);color:var(--gold);background:var(--hover-bg)}
+.action-btn svg{width:17px;height:17px;pointer-events:none}
+.notif-dot-badge{position:absolute;top:7px;right:7px;width:7px;height:7px;border-radius:50%;background:var(--red);border:1.5px solid var(--obsidian)}
+.action-dropdown{position:absolute;top:calc(100% + 10px);right:0;background:var(--panel);border:1px solid var(--border-hi);box-shadow:0 20px 60px rgba(0,0,0,0.50);z-index:300;opacity:0;pointer-events:none;transform:translateY(-6px) scale(0.98);transition:opacity .22s ease,transform .22s ease;min-width:260px}
+.action-dropdown::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),transparent)}
+.action-dropdown.open{opacity:1;pointer-events:all;transform:translateY(0) scale(1)}
+.dd-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px 12px;border-bottom:1px solid var(--border)}
+.dd-title{font-size:.72rem;font-weight:600;color:var(--white);letter-spacing:.08em;text-transform:uppercase}
+.dd-action-link{font-size:.6rem;color:var(--gold);letter-spacing:.08em;background:none;border:none;font-family:'Montserrat',sans-serif;transition:opacity .2s}
+.dd-action-link:hover{opacity:.7}
+.notif-empty{padding:32px 18px;text-align:center;font-size:.75rem;color:var(--muted);line-height:1.6}
+.notif-empty svg{width:28px;height:28px;color:var(--gold-dim);display:block;margin:0 auto 10px;opacity:.5}
+.lang-dropdown{min-width:200px}
+.lang-option{display:flex;align-items:center;gap:11px;padding:11px 18px;transition:background .2s;background:none;border:none;border-bottom:1px solid var(--border);width:100%;text-align:left}
+.lang-option:last-child{border-bottom:none}
+.lang-option:hover{background:var(--hover-bg)}
+.lang-option.selected{background:var(--active-bg)}
+.lang-flag{font-size:1rem;flex-shrink:0;line-height:1}
+.lang-name{font-size:.75rem;color:var(--text);font-family:'Montserrat',sans-serif;flex:1}
+.lang-code{font-size:.6rem;color:var(--muted);font-family:'DM Mono',monospace}
+.lang-check{color:var(--gold);flex-shrink:0}
+.lang-check svg{width:13px;height:13px}
+.apps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:10px 12px 12px}
+.app-tile{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:8px;background:var(--surface);border:1px solid var(--border);transition:all .2s;text-decoration:none;color:var(--text)}
+.app-tile:hover{border-color:var(--gold);background:rgba(201,169,110,0.07)}
+.app-tile svg{width:18px;height:18px;stroke:var(--gold);flex-shrink:0}
+.app-tile-label{font-size:.58rem;font-family:'Montserrat',sans-serif;letter-spacing:.05em;color:var(--muted);text-transform:uppercase;text-align:center}
+
+</style>
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <a href="home.html" class="s-logo"><img src="logo.png" alt="DIP Trading" class="sidebar-logo-img"></a>
+    <button class="collapse-btn" id="collapseBtn" aria-label="Toggle sidebar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="sidebar-user">
+    <div class="user-avatar">S</div>
+    <div class="user-info">
+      <div class="user-name">Salihaj</div>
+      <div class="user-status"><span class="status-dot"></span><span>Active Partner</span></div>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">
+      <div class="nav-section-label">Overview</div>
+      <a href="dashboard.html" class="nav-item" data-tooltip="Dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        <span class="nav-label">Dashboard</span>
+      </a>
+    </div>
+    <div class="nav-divider"></div>
+    <div class="nav-section">
+      <div class="nav-section-label">Management</div>
+      <a href="packages.html" class="nav-item" data-tooltip="Investments">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        <span class="nav-label">Investments</span><span class="nav-badge">3</span>
+      </a>
+      <a href="finance.html" class="nav-item" data-tooltip="Finance">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        <span class="nav-label">Finance</span>
+      </a>
+      <a href="wallet.html" class="nav-item" data-tooltip="Wallet">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        <span class="nav-label">Wallet</span>
+      </a>
+      <div class="nav-divider"></div>
+      <a href="team.html" class="nav-item" data-tooltip="My Team">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span class="nav-label">My Team</span>
+      </a>
+      <a href="my-investments.html" class="nav-item" data-tooltip="My Investments">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span class="nav-label">My Investments</span>
+      </a>
+      <a href="profile.html" class="nav-item" data-tooltip="Profile">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span class="nav-label">Profile</span>
+      </a>
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="theme-row">
+      <div class="theme-label">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>
+        <span>Appearance</span>
+      </div>
+      <button class="theme-toggle-btn" id="themeToggle" aria-label="Toggle theme">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+    <a href="home.html" class="footer-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Home</span>
+    </a>
+    <button class="footer-item logout">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      <span>Sign Out</span>
+    </button>
+  </div>
+</aside>
+
+<!-- ══ MAIN CONTENT ══ -->
+<div class="main-content" id="mainContent">
+
+<!-- Custom cursor -->
+<div class="cursor" id="cursor">
+  <div class="cursor-dot"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+</div>
+
+<!-- ══ INVOICE MODAL ══ -->
+<div class="inv-modal-overlay" id="invoiceModalOverlay">
+  <div class="inv-modal" role="dialog" aria-modal="true">
+    <div class="inv-modal-header">
+      <div class="inv-modal-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="3" width="20" height="18" rx="2"/><line x1="8" y1="8" x2="16" y2="8"/>
+          <line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="12" y2="16"/>
+        </svg>
+        Payment Invoice
+      </div>
+      <button class="inv-modal-close" id="invoiceModalClose" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="inv-modal-body">
+      <div class="inv-id-block">
+        <div class="inv-id-label">Invoice ID</div>
+        <div class="inv-id-value" id="invModalId">—</div>
+        <div class="inv-status-row">
+          <span class="status-badge" id="invModalStatus"></span>
+        </div>
+      </div>
+      <hr class="inv-divider">
+      <div class="inv-pkg-card">
+        <div class="inv-pkg-card-icon" id="invModalPkgIcon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>
+          </svg>
+        </div>
+        <div>
+          <div class="inv-pkg-card-name" id="invModalPkgName">—</div>
+          <div class="inv-pkg-card-type">Trading Investment</div>
+        </div>
+      </div>
+      <div class="inv-detail-rows">
+        <div class="inv-detail-row-item">
+          <span class="inv-detail-row-lbl">Payment Method</span>
+          <span class="inv-detail-row-val">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/>
+            </svg>
+            <span id="invModalMethod">—</span>
+          </span>
+        </div>
+        <div class="inv-detail-row-item">
+          <span class="inv-detail-row-lbl">Transaction Reference</span>
+          <span class="inv-detail-row-val" id="invModalTxRef" style="font-size:.65rem;word-break:break-all;text-align:right;max-width:240px">—</span>
+        </div>
+        <div class="inv-detail-row-item">
+          <span class="inv-detail-row-lbl">Date</span>
+          <span class="inv-detail-row-val" id="invModalDate">—</span>
+        </div>
+      </div>
+      <hr class="inv-divider">
+      <div class="inv-total-row">
+        <span class="inv-total-lbl">Total Paid</span>
+        <span class="inv-total-val" id="invModalTotal">—</span>
+      </div>
+      <button class="inv-download-btn" id="invDownloadBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        <span>Download Invoice</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+
+  <div class="top-bar">
+    <nav class="breadcrumb">
+      <a href="dashboard.html">Dashboard</a>
+      <span class="breadcrumb-sep">/</span>
+      <span class="breadcrumb-current">My Investments</span>
+    </nav>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div class="top-search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" placeholder="Search investments, packages…" />
+        </div>
+        <div class="top-actions">
+        <div class="action-btn" id="appsBtn" aria-label="Quick Access" role="button" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          <div class="action-dropdown" id="appsDropdown" style="min-width:252px;right:0;padding-bottom:8px;">
+            <div class="dd-head"><span class="dd-title">Quick Access</span></div>
+            <div class="apps-grid">
+              <a href="dashboard.html" class="app-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg><span class="app-tile-label">Dashboard</span></a>
+              <a href="wallet.html" class="app-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg><span class="app-tile-label">Wallet</span></a>
+              <a href="packages.html" class="app-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg><span class="app-tile-label">Invest</span></a>
+              <a href="finance.html" class="app-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg><span class="app-tile-label">Finance</span></a>
+              <a href="team.html" class="app-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="app-tile-label">My Team</span></a>
+              <a href="profile.html" class="app-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="app-tile-label">Profile</span></a>
+            </div>
+          </div>
+        </div>
+        <div class="action-btn" id="translateBtn" aria-label="Language" role="button" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <div class="action-dropdown lang-dropdown" id="translateDropdown">
+            <div class="dd-head"><span class="dd-title">Language</span></div>
+            <button class="lang-option selected" data-lang="en"><span class="lang-flag">🇬🇧</span><span class="lang-name">English</span><span class="lang-code">EN</span><span class="lang-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></button>
+            <button class="lang-option" data-lang="ar"><span class="lang-flag">🇸🇦</span><span class="lang-name">Arabic</span><span class="lang-code">AR</span></button>
+            <button class="lang-option" data-lang="fr"><span class="lang-flag">🇫🇷</span><span class="lang-name">French</span><span class="lang-code">FR</span></button>
+            <button class="lang-option" data-lang="es"><span class="lang-flag">🇪🇸</span><span class="lang-name">Spanish</span><span class="lang-code">ES</span></button>
+            <button class="lang-option" data-lang="de"><span class="lang-flag">🇩🇪</span><span class="lang-name">German</span><span class="lang-code">DE</span></button>
+          </div>
+        </div>
+        <div class="action-btn" id="notifBtn" aria-label="Notifications" role="button" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="notif-dot-badge" id="notifBadge" style="display:none;"></span>
+          <div class="action-dropdown" id="notifDropdown" style="min-width:300px;right:0;">
+            <div class="dd-head"><span class="dd-title">Notifications</span><button class="dd-action-link" id="markAllRead">Mark all read</button></div>
+            <div id="notifList"><div class="notif-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>No new notifications</div></div>
+          </div>
+        </div>
+        <div class="action-btn" id="settingsBtn" aria-label="Settings" role="button" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </div>
+      </div>
+      </div>
+  </div>
+
+  <main class="page-wrap">
+
+    <!-- Page Header -->
+    <div class="page-header reveal">
+      <h1 class="page-title">My Investments</h1>
+      <p class="page-subtitle">View all your past and current investments</p>
+    </div>
+
+    <!-- ── STAT CARDS ── -->
+    <div class="stat-cards-grid reveal" style="transition-delay:.08s">
+
+      <div class="stat-card">
+        <div class="stat-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <div class="stat-card-number" id="totalCount">—</div>
+        <div class="stat-card-sub" id="totalInvested">—</div>
+        <div class="stat-card-label">Total Investments</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="stat-card-number" id="activeCount">—</div>
+        <div class="stat-card-sub" id="activeInvested">—</div>
+        <div class="stat-card-label">Active</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="stat-card-number" id="completedCount">—</div>
+        <div class="stat-card-sub" id="completedInvested">—</div>
+        <div class="stat-card-label">Completed</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div class="stat-card-number" id="totalEarned">—</div>
+        <div class="stat-card-label">Total Earned</div>
+      </div>
+
+    </div>
+
+    <!-- ── INVESTMENTS TABLE ── -->
+    <div class="investments-section reveal" style="transition-delay:.16s">
+
+      <div class="investments-header">
+        <h2 class="investments-title">All Investments</h2>
+        <div class="filter-row">
+          <div class="filter-tabs">
+            <button class="filter-tab active" data-filter="all">All</button>
+            <button class="filter-tab" data-filter="active">Active</button>
+            <button class="filter-tab" data-filter="completed">Completed</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="inv-table-wrap">
+        <table class="inv-table" id="invTable">
+          <thead>
+            <tr>
+              <th>Package</th>
+              <th>Amount</th>
+              <th>Next Return</th>
+              <th>Earned</th>
+              <th style="text-align:right">Payment</th>
+            </tr>
+          </thead>
+          <tbody id="invBody">
+            <!-- Populated by JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Empty state (hidden when data present) -->
+      <div class="inv-empty" id="invEmpty" style="display:none">
+        <div class="inv-empty-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+          </svg>
+        </div>
+        <p class="inv-empty-text">No investments found</p>
+        <p class="inv-empty-sub">Your investments will appear here once you get started.</p>
+      </div>
+
+    </div>
+
+  </main>
+</div>
+
+<script>
+/* ── Theme ── */
+const root  = document.documentElement;
+const saved = localStorage.getItem('dip-theme');
+if (saved) root.setAttribute('data-theme', saved);
+document.getElementById('themeToggle').addEventListener('click', () => {
+  const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  root.setAttribute('data-theme', next);
+  localStorage.setItem('dip-theme', next);
+});
+
+/* ── Sidebar Collapse ── */
+const sidebar = document.getElementById('sidebar');
+document.getElementById('collapseBtn').addEventListener('click', () => {
+  sidebar.classList.toggle('collapsed');
+  localStorage.setItem('dip-sidebar-collapsed', sidebar.classList.contains('collapsed') ? '1' : '0');
+});
+if (localStorage.getItem('dip-sidebar-collapsed') === '1') sidebar.classList.add('collapsed');
+
+/* ── Custom Cursor ── */
+const cursorDot  = document.querySelector('.cursor-dot');
+const cursorRing = document.getElementById('cursorRing');
+let mx = -100, my = -100, rx = -100, ry = -100;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+(function animCursor() {
+  cursorDot.style.left = mx + 'px'; cursorDot.style.top = my + 'px';
+  rx += (mx - rx) * 0.15; ry += (my - ry) * 0.15;
+  cursorRing.style.left = rx + 'px'; cursorRing.style.top = ry + 'px';
+  requestAnimationFrame(animCursor);
+})();
+
+/* ── Investments Data ── */
+const investments = [
+  {
+    id: 1,
+    package:      'Platinum Wealth Builder',
+    amount:       500000,
+    annualReturn: 20,
+    frequency:    'Quarterly',
+    startDate:    'Jan 15, 2026',
+    endDate:      'Jan 15, 2031',
+    nextReturn:   'Jul 15, 2026',
+    earned:       25000,
+    status:       'active',
+    invoiceId:    'INV-202601-000001',
+    paymentMethod:'USDT TRC20',
+    txRef:        'TRX8K2MPQ4WJDC9NBES5YL7RH0',
+    paymentDate:  'Jan 15, 2026 at 09:42 AM'
+  },
+  {
+    id: 2,
+    package:      'Long-Term Property Investment',
+    amount:       250000,
+    annualReturn: 15,
+    frequency:    'Quarterly',
+    startDate:    'Apr 03, 2026',
+    endDate:      'Apr 03, 2029',
+    nextReturn:   'Jul 03, 2026',
+    earned:       0,
+    status:       'active',
+    invoiceId:    'INV-202604-000002',
+    paymentMethod:'Stripe',
+    txRef:        'STR9X1LBNK7QMC4HFTZ2AE0VY3',
+    paymentDate:  'Apr 03, 2026 at 11:15 AM'
+  },
+  {
+    id: 3,
+    package:      'Premium Growth Portfolio',
+    amount:       100000,
+    annualReturn: 18,
+    frequency:    'Semi-Annual',
+    startDate:    'Oct 10, 2025',
+    endDate:      'Oct 10, 2028',
+    nextReturn:   'Apr 10, 2026',
+    earned:       9000,
+    status:       'active',
+    invoiceId:    'INV-202510-000003',
+    paymentMethod:'USDT TRC20',
+    txRef:        'TRX5J0FRDKA8WGNZUV3QP6CYI2',
+    paymentDate:  'Oct 10, 2025 at 03:28 PM'
+  },
+  {
+    id: 4,
+    package:      'Blue-Chip Estate Fund',
+    amount:       75000,
+    annualReturn: 14,
+    frequency:    'Quarterly',
+    startDate:    'Feb 20, 2026',
+    endDate:      'Feb 20, 2028',
+    nextReturn:   'May 20, 2026',
+    earned:       1750,
+    status:       'active',
+    invoiceId:    'INV-202602-000004',
+    paymentMethod:'Stripe',
+    txRef:        'STR3D7GLHQWX5RZPCU9MNT4KB1',
+    paymentDate:  'Feb 20, 2026 at 01:50 PM'
+  },
+  {
+    id: 5,
+    package:      'Gold Reserve Fund',
+    amount:       50000,
+    annualReturn: 12,
+    frequency:    'Monthly',
+    startDate:    'Dec 01, 2025',
+    endDate:      'Dec 01, 2027',
+    nextReturn:   'May 01, 2026',
+    earned:       2500,
+    status:       'active',
+    invoiceId:    'INV-202512-000005',
+    paymentMethod:'USDT TRC20',
+    txRef:        'TRX2V6YSCBE1PJHAQ8MWN0DXKF',
+    paymentDate:  'Dec 01, 2025 at 08:07 AM'
+  },
+  {
+    id: 6,
+    package:      'Silver Estate Plan',
+    amount:       25000,
+    annualReturn: 13,
+    frequency:    'Quarterly',
+    startDate:    'Mar 15, 2024',
+    endDate:      'Mar 15, 2026',
+    nextReturn:   '—',
+    earned:       6500,
+    status:       'completed',
+    invoiceId:    'INV-202403-000006',
+    paymentMethod:'Stripe',
+    txRef:        'STR7N4ACKZPJ2MHEVWQR9GXFYU',
+    paymentDate:  'Mar 15, 2024 at 04:33 PM'
+  },
+  {
+    id: 7,
+    package:      'Starter Package',
+    amount:       5000,
+    annualReturn: 10,
+    frequency:    'Monthly',
+    startDate:    'Jun 01, 2024',
+    endDate:      'Jun 01, 2025',
+    nextReturn:   '—',
+    earned:       500,
+    status:       'completed',
+    invoiceId:    'INV-202406-000007',
+    paymentMethod:'USDT TRC20',
+    txRef:        'TRX4H9BWRUMFS6DKZCLQYEPJA3',
+    paymentDate:  'Jun 01, 2024 at 10:19 AM'
+  }
+];
+
+/* ── Helpers ── */
+let activeFilter = 'all';
+
+function formatCurrency(n) {
+  return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 0 });
+}
+function formatLarge(n) {
+  if (n >= 1000000) return '$' + (n / 1000000).toFixed(2) + 'M';
+  if (n >= 1000)    return '$' + (n / 1000).toFixed(1) + 'K';
+  return '$' + n.toLocaleString('en-US');
+}
+function pkgColor(name) {
+  const n = name.toLowerCase();
+  if (n.includes('platinum')) return { bg: 'rgba(167,139,250,0.18)', stroke: '#a78bfa' };
+  if (n.includes('gold'))     return { bg: 'rgba(201,169,110,0.18)', stroke: '#C9A96E' };
+  if (n.includes('silver'))   return { bg: 'rgba(148,163,184,0.18)', stroke: '#94a3b8' };
+  if (n.includes('premium'))  return { bg: 'rgba(244,114,182,0.15)', stroke: '#f472b6' };
+  if (n.includes('blue'))     return { bg: 'rgba(96,165,250,0.18)',  stroke: '#60a5fa' };
+  if (n.includes('starter'))  return { bg: 'rgba(107,114,128,0.18)', stroke: '#9ca3af' };
+  return { bg: 'rgba(201,169,110,0.18)', stroke: '#C9A96E' };
+}
+function calcProgress(startStr, endStr) {
+  const start = new Date(startStr), end = new Date(endStr), now = new Date();
+  return Math.min(100, Math.max(0, ((now - start) / (end - start)) * 100)).toFixed(0);
+}
+function payoutAmt(inv) {
+  const d = inv.frequency === 'Monthly' ? 12 : inv.frequency === 'Quarterly' ? 4 : 2;
+  return Math.round(inv.amount * inv.annualReturn / 100 / d);
+}
+function periodLabel(freq) {
+  return freq === 'Monthly' ? 'month' : freq === 'Quarterly' ? 'quarter' : '6 months';
+}
+
+/* ── Render ── */
+function renderTable(filter) {
+  const body  = document.getElementById('invBody');
+  const empty = document.getElementById('invEmpty');
+  const rows  = filter === 'all' ? investments : investments.filter(i => i.status === filter);
+
+  if (rows.length === 0) {
+    body.innerHTML = '';
+    empty.style.display = '';
+    return;
+  }
+  empty.style.display = 'none';
+
+  body.innerHTML = rows.map(function(inv) {
+    var color    = pkgColor(inv.package);
+    var payout   = payoutAmt(inv);
+    var plabel   = periodLabel(inv.frequency);
+    var progress = inv.status === 'active' ? Number(calcProgress(inv.startDate, inv.endDate)) : 100;
+    var rowClass = inv.status === 'completed' ? 'completed-row' : '';
+    var invId    = String(inv.id).padStart(4, '0');
+    var statusCap = inv.status.charAt(0).toUpperCase() + inv.status.slice(1);
+
+
+
+    var badgeHtml = inv.status === 'active'
+      ? '<span class="status-badge active-badge">Active</span>'
+      : '<span class="status-badge completed-badge">Completed</span>';
+
+    return `
+    <tr class="${rowClass}">
+      <td>
+        <div class="pkg-cell">
+          <div class="pkg-icon" style="background:${color.bg}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="${color.stroke}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+              <polyline points="17 6 23 6 23 12"/>
+            </svg>
+          </div>
+          <div style="min-width:0;">
+            <span class="pkg-name">${inv.package}</span>
+            <div style="margin-top:5px;">${badgeHtml}</div>
+          </div>
+        </div>
+      </td>
+      <td><span class="amount-cell">${formatCurrency(inv.amount)}</span></td>
+      <td><span class="next-return-cell">${inv.nextReturn}</span></td>
+      <td>
+        <span class="earned-cell">${formatCurrency(inv.earned)}</span>
+      </td>
+      <td class="action-cell">
+        <button class="view-invoice-btn" data-id="${inv.id}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="18" rx="2"/><line x1="8" y1="8" x2="16" y2="8"/>
+            <line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="12" y2="16"/>
+          </svg>
+          View Payment
+        </button>
+      </td>
+    </tr>`;
+  }).join('');
+
+}
+
+/* ── Update stat counters ── */
+function updateStats() {
+  const activeInvs    = investments.filter(i => i.status === 'active');
+  const completedInvs = investments.filter(i => i.status === 'completed');
+  const totalInvested = investments.reduce((s, i) => s + i.amount, 0);
+  const totalEarned   = investments.reduce((s, i) => s + i.earned, 0);
+  const activeAmt     = activeInvs.reduce((s, i) => s + i.amount, 0);
+  const completedAmt  = completedInvs.reduce((s, i) => s + i.amount, 0);
+  document.getElementById('totalCount').textContent      = investments.length;
+  document.getElementById('totalInvested').textContent   = formatLarge(totalInvested);
+  document.getElementById('activeCount').textContent     = activeInvs.length;
+  document.getElementById('activeInvested').textContent  = formatLarge(activeAmt);
+  document.getElementById('completedCount').textContent  = completedInvs.length;
+  document.getElementById('completedInvested').textContent = formatLarge(completedAmt);
+  document.getElementById('totalEarned').textContent     = formatLarge(totalEarned);
+}
+
+/* ── Invoice Modal ── */
+const invoiceOverlay = document.getElementById('invoiceModalOverlay');
+document.body.appendChild(invoiceOverlay); // move to body so position:fixed covers full viewport
+document.getElementById('invoiceModalClose').addEventListener('click', () => invoiceOverlay.classList.remove('open'));
+invoiceOverlay.addEventListener('click', e => { if (e.target === invoiceOverlay) invoiceOverlay.classList.remove('open'); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') invoiceOverlay.classList.remove('open'); });
+
+document.getElementById('invBody').addEventListener('click', function(e) {
+  const btn = e.target.closest('.view-invoice-btn');
+  if (!btn) return;
+  const inv = investments.find(i => i.id === Number(btn.dataset.id));
+  if (!inv) return;
+
+  var color = pkgColor(inv.package);
+  document.getElementById('invModalId').textContent    = inv.invoiceId;
+  document.getElementById('invModalPkgName').textContent = inv.package;
+  document.getElementById('invModalMethod').textContent  = inv.paymentMethod;
+  document.getElementById('invModalTxRef').textContent   = inv.txRef;
+  document.getElementById('invModalDate').textContent    = inv.paymentDate;
+  document.getElementById('invModalTotal').textContent   = formatCurrency(inv.amount);
+
+  var icon = document.getElementById('invModalPkgIcon');
+  icon.style.background = color.bg;
+  icon.querySelector('svg').setAttribute('stroke', color.stroke);
+
+  var statusEl = document.getElementById('invModalStatus');
+  if (inv.status === 'active') {
+    statusEl.className = 'status-badge active-badge';
+    statusEl.textContent = 'Active';
+  } else {
+    statusEl.className = 'status-badge completed-badge';
+    statusEl.textContent = 'Completed';
+  }
+
+  invoiceOverlay.classList.add('open');
+});
+
+document.getElementById('invDownloadBtn').addEventListener('click', function() {
+  var id   = document.getElementById('invModalId').textContent;
+  var name = document.getElementById('invModalPkgName').textContent;
+  var method = document.getElementById('invModalMethod').textContent;
+  var txref  = document.getElementById('invModalTxRef').textContent;
+  var date   = document.getElementById('invModalDate').textContent;
+  var total  = document.getElementById('invModalTotal').textContent;
+  var csv = 'Invoice ID,Package,Payment Method,Transaction Ref,Date,Total\n'
+          + '"' + id + '","' + name + '","' + method + '","' + txref + '","' + date + '","' + total + '"';
+  var blob = new Blob([csv], { type: 'text/csv' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = id + '.csv';
+  a.click();
+});
+
+/* ── Filter tabs ── */
+document.querySelectorAll('.filter-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilter = btn.dataset.filter;
+    renderTable(activeFilter);
+  });
+});
+
+/* ── Reveal animation ── */
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+/* ── Init ── */
+updateStats();
+renderTable('all');
+</script>
+<script>
+/* ── Auto-active sidebar nav ── */
+(function(){
+  const page = window.location.pathname.split('/').pop() || 'index.html';
+  document.querySelectorAll('.nav-item[href]').forEach(function(link){
+    const href = link.getAttribute('href').split('/').pop();
+    link.classList.toggle('active', href === page);
+  });
+})();
+</script>
+<script>
+/* ── Top Bar Dropdowns ── */
+(function(){
+  const tBtn=document.getElementById('translateBtn'),tDd=document.getElementById('translateDropdown');
+  const nBtn=document.getElementById('notifBtn'),nDd=document.getElementById('notifDropdown'),nBadge=document.getElementById('notifBadge');
+  const aBtn=document.getElementById('appsBtn'),aDd=document.getElementById('appsDropdown');
+  const sBtn=document.getElementById('settingsBtn');
+  function closeAll(){document.querySelectorAll('.action-dropdown').forEach(d=>d.classList.remove('open'));}
+  document.addEventListener('click',closeAll);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAll();});
+  if(tBtn&&tDd)tBtn.addEventListener('click',e=>{e.stopPropagation();const o=tDd.classList.contains('open');closeAll();if(!o)tDd.classList.add('open');});
+  if(nBtn&&nDd)nBtn.addEventListener('click',e=>{e.stopPropagation();const o=nDd.classList.contains('open');closeAll();if(!o)nDd.classList.add('open');});
+  if(aBtn&&aDd)aBtn.addEventListener('click',e=>{e.stopPropagation();const o=aDd.classList.contains('open');closeAll();if(!o)aDd.classList.add('open');});
+  if(sBtn)sBtn.addEventListener('click',e=>{e.stopPropagation();window.location.href='profile.html';});
+  const savedLang=localStorage.getItem('dip-lang')||'en';
+  document.querySelectorAll('.lang-option').forEach(btn=>{
+    btn.classList.toggle('selected',btn.dataset.lang===savedLang);
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.lang-option').forEach(b=>b.classList.remove('selected'));
+      btn.classList.add('selected');localStorage.setItem('dip-lang',btn.dataset.lang);closeAll();
+    });
+  });
+  const markAllBtn=document.getElementById('markAllRead');
+  if(markAllBtn)markAllBtn.addEventListener('click',e=>{e.stopPropagation();document.querySelectorAll('.notif-indicator').forEach(d=>d.classList.add('read'));if(nBadge)nBadge.style.display='none';});
+})();
+</script>
+</body>
+</html>
